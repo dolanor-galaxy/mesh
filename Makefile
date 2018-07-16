@@ -15,11 +15,15 @@ deps:
 	# go get -u github.com/go-gl/gl/v3.1/gles2
 	go get -u github.com/go-gl/gl/v2.1/gl
 	go get -v github.com/chsc/gogl/gl33
+
 build:
 	go build hello.go
 
 clean:
 	go clean -i
+
+test:
+	cd algebra; go test
 
 install:
 	go install
