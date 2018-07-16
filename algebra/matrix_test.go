@@ -70,3 +70,24 @@ func TestMatrixMul(t *testing.T) {
 		t.Errorf("Expected %v to equal %v", expected, m3)
 	}
 }
+
+func TestMatrixAsArray(t *testing.T) {
+	m1 := algebra.Matrix{
+		{10, 20, 30, 40},
+		{10, 20, 30, 40},
+		{10, 20, 30, 40},
+		{10, 20, 30, 40},
+	}
+	expected := [16]float32{
+		10, 20, 30, 40,
+		10, 20, 30, 40,
+		10, 20, 30, 40,
+		10, 20, 30, 40,
+	}
+
+	actual := m1.AsArray()
+
+	if actual != expected {
+		t.Errorf("AsArray %v to equal %v", expected, actual)
+	}
+}
