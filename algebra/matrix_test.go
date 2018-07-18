@@ -43,6 +43,24 @@ func TestInitRotation(t *testing.T) {
 	}
 }
 
+func TestInitScale(t *testing.T) {
+	expected := algebra.Matrix{
+		{2.0, 0.0, 0.0, 0.0},
+		{0.0, 3.0, 0.0, 0.0},
+		{0.0, 0.0, 4.0, 0.0},
+		{0.0, 0.0, 0.0, 1.0},
+	}
+
+	m := algebra.Matrix{}
+	p := algebra.Vector{X: 2.0, Y: 3.0, Z: 4.0, W: .0}
+
+	m.InitScale(&p)
+
+	if m != expected {
+		t.Errorf("InitScale did something odd: %v", m)
+	}
+}
+
 func TestMatrixMul(t *testing.T) {
 	expected := algebra.Matrix{
 		{10, 20, 30, 40},
@@ -68,6 +86,24 @@ func TestMatrixMul(t *testing.T) {
 
 	if *m3 != expected {
 		t.Errorf("Expected %v to equal %v", expected, m3)
+	}
+}
+
+func TestTranspose(t *testing.T) {
+	expected := algebra.Matrix{
+		{1.0, 0.0, 0.0, 2.0},
+		{0.0, 1.0, 0.0, 3.0},
+		{0.0, 0.0, 1.0, 4.0},
+		{0.0, 0.0, 0.0, 1.0},
+	}
+
+	m := algebra.Matrix{}
+	p := algebra.Vector{X: 2.0, Y: 3.0, Z: 4.0, W: .0}
+
+	m.InitTranslation(&p).Transpose()
+
+	if m != expected {
+		t.Errorf("Transpose did something odd: %v", m)
 	}
 }
 

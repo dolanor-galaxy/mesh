@@ -4,11 +4,10 @@ import (
 	"math"
 )
 
-// Matrix 4x4 matrix
+// Matrix 4x4 matrix Row-Major Ordering
 type Matrix [4][4]float64
 
 // Identity create an identity matrix
-// Row-Major Ordering
 //     0 1 2 3
 //   ---------
 //  0 | 1 0 0 0
@@ -40,7 +39,6 @@ func (m *Matrix) Identity() *Matrix {
 }
 
 // InitTranslation initialize the matrix with a translation point
-// Row-Major Ordering
 //      0 1 2 3
 //    ---------
 //  0 | 1 0 0 0
@@ -146,6 +144,37 @@ func (m *Matrix) InitRotation(p *Vector) *Matrix {
 	return m
 }
 
+// InitScale initialize with scale
+//      0 1 2 3
+//    ---------
+//  0 | x 0 0 0
+//  1 | 0 y 0 0
+//  2 | 0 0 z 0
+//  3 | 0 0 0 1
+func (m *Matrix) InitScale(p *Vector) *Matrix {
+	m[0][0] = p.X
+	m[0][1] = 0
+	m[0][2] = 0
+	m[0][3] = 0
+
+	m[1][0] = 0
+	m[1][1] = p.Y
+	m[1][2] = 0
+	m[1][3] = 0
+
+	m[2][0] = 0
+	m[2][1] = 0
+	m[2][2] = p.Z
+	m[2][3] = 0
+
+	m[3][0] = 0
+	m[3][1] = 0
+	m[3][2] = 0
+	m[3][3] = 1
+
+	return m
+}
+
 // Mul multiply two matries
 func (m *Matrix) Mul(r *Matrix) *Matrix {
 	res := Matrix{}
@@ -232,6 +261,23 @@ func (m *Matrix) Mul(r *Matrix) *Matrix {
 		m[3][3]*r[3][3]
 
 	return &res
+}
+
+// Transpose Changes the matrix from Row-Major to Column-Major
+func (m *Matrix) Transpose() *Matrix {
+	nm := Matrix{
+		{m[0][0], m[1][0], m[2][0], m[3][0]},
+		{m[0][1], m[1][1], m[2][1], m[3][1]},
+		{m[0][2], m[1][2], m[2][2], m[3][2]},
+		{m[0][3], m[1][3], m[2][3], m[3][3]},
+	}
+
+	m[0] = nm[0]
+	m[1] = nm[1]
+	m[2] = nm[2]
+	m[3] = nm[3]
+
+	return &nm
 }
 
 // AsArray return the matrix as a flat array
