@@ -158,3 +158,13 @@ func (v *Vector) Div(r float64) Vector {
 		Z: v.Z / r,
 	}
 }
+
+// Abs absolute value of this vector
+func (v *Vector) Abs() Vector {
+	return Vector{X: math.Abs(v.X), Y: math.Abs(v.Y), Z: math.Abs(v.Z)}
+}
+
+// Magnitude the magnitude of this vector
+func (v *Vector) Magnitude() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y + v.Z*v.Z)
+}

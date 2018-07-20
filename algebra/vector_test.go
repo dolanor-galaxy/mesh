@@ -267,3 +267,27 @@ func TestDiv0(t *testing.T) {
 		t.Errorf("Should not get here")
 	}
 }
+
+func TestVecAbs(t *testing.T) {
+	expected := algebra.Vector{X: 2.9, Y: 55.8, Z: .898}
+
+	a := algebra.Vector{X: -2.9, Y: 55.8, Z: -.898}
+
+	actual := a.Abs()
+
+	if actual != expected {
+		t.Errorf("Abs %v should be %v", actual, expected)
+	}
+}
+
+func TestVecMagnitude(t *testing.T) {
+	expected := 55.88252324296031
+
+	a := algebra.Vector{X: -2.9, Y: 55.8, Z: -.898}
+
+	actual := a.Magnitude()
+
+	if actual != expected {
+		t.Errorf("Magnitude %v should be %v", actual, expected)
+	}
+}

@@ -421,11 +421,11 @@ func (m *Matrix) Inverse() Matrix {
 	m[3][3] = d * ((tmp22*m22 + tmp16*m02 + tmp21*m12) -
 		(tmp20*m12 + tmp23*m22 + tmp17*m02))
 
-	return m.Copy()
+	return m.Clone()
 }
 
-// Copy duplicate the matrix
-func (m *Matrix) Copy() Matrix {
+// Clone duplicate the matrix
+func (m *Matrix) Clone() Matrix {
 	nm := Matrix{}
 	nm[0] = m[0]
 	nm[1] = m[1]

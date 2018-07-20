@@ -193,7 +193,7 @@ func TestMatrixAsArray(t *testing.T) {
 	}
 }
 
-func TestMatrixCopy(t *testing.T) {
+func TestMatrixClone(t *testing.T) {
 	m1 := algebra.Matrix{
 		{10, 20, 30, 40},
 		{10, 20, 30, 40},
@@ -201,13 +201,13 @@ func TestMatrixCopy(t *testing.T) {
 		{10, 20, 30, 40},
 	}
 
-	m2 := m1.Copy()
+	m2 := m1.Clone()
 
 	if m1 != m2 {
-		t.Errorf("Copy %v to equal %v", m1, m2)
+		t.Errorf("Clone %v to equal %v", m1, m2)
 	}
 	if &m1 == &m2 {
-		t.Errorf("Copy %p same address %p", &m1, &m2)
+		t.Errorf("Clone %p same address %p", &m1, &m2)
 	}
 
 	m2[1][1] = 99
