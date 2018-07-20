@@ -56,7 +56,7 @@ func TestMaxV(t *testing.T) {
 	b := algebra.Vector{X: 9.3, Y: 5.8, Z: 33.898}
 
 	expected := algebra.Vector{X: 9.3, Y: 55.8, Z: 33.898}
-	actual := a.MaxV(&b)
+	actual := a.MaxV(b)
 
 	if actual != expected {
 		t.Errorf("MaxV: %v should be %v", actual, expected)
@@ -68,7 +68,7 @@ func TestDot(t *testing.T) {
 	b := algebra.Vector{X: 9.3, Y: 5.8, Z: 33.898}
 
 	expected := 381.050404
-	actual := a.Dot(&b)
+	actual := a.Dot(b)
 
 	if actual != expected {
 		t.Errorf("Dot: %v should be %v", actual, expected)
@@ -85,7 +85,7 @@ func TestCross(t *testing.T) {
 		Z: -502.12000000000006,
 		W: 0,
 	}
-	actual := a.Cross(&b)
+	actual := a.Cross(b)
 
 	if actual != expected {
 		t.Errorf("Cross: %v should be %v", actual, expected)
@@ -116,7 +116,7 @@ func TestAddV(t *testing.T) {
 		Y: 61.599999999999994,
 		Z: 34.79600000000001,
 	}
-	actual, _ := a.AddV(&b)
+	actual := a.AddV(b)
 
 	if actual != expected {
 		t.Errorf("AddV: %v should be %v", actual, expected)
@@ -132,7 +132,7 @@ func TestAdd(t *testing.T) {
 		Y: 59.8,
 		Z: 4.898,
 	}
-	actual, _ := a.Add(b)
+	actual := a.Add(b)
 
 	if actual != expected {
 		t.Errorf("Add: %v should be %v", actual, expected)
@@ -148,7 +148,7 @@ func TestSubV(t *testing.T) {
 		Y: 50,
 		Z: -33,
 	}
-	actual, _ := a.SubV(&b)
+	actual := a.SubV(b)
 
 	if actual != expected {
 		t.Errorf("SubV: %v should be %v", actual, expected)
@@ -164,7 +164,7 @@ func TestSub(t *testing.T) {
 		Y: 51.8,
 		Z: -3.102,
 	}
-	actual, _ := a.Sub(b)
+	actual := a.Sub(b)
 
 	if actual != expected {
 		t.Errorf("Sub: %v should be %v", actual, expected)
@@ -180,7 +180,7 @@ func TestMulV(t *testing.T) {
 		Y: 323.64,
 		Z: 30.440404000000004,
 	}
-	actual, _ := a.MulV(&b)
+	actual := a.MulV(b)
 
 	if actual != expected {
 		t.Errorf("MulV: %v should be %v", actual, expected)
@@ -196,7 +196,7 @@ func TestMul(t *testing.T) {
 		Y: 223.2,
 		Z: 3.592,
 	}
-	actual, _ := a.Mul(b)
+	actual := a.Mul(b)
 
 	if actual != expected {
 		t.Errorf("Mul: %v should be %v", actual, expected)
@@ -212,7 +212,7 @@ func TestDivV(t *testing.T) {
 		Y: 9.620689655172413,
 		Z: 0.02649123842114579,
 	}
-	actual, _ := a.DivV(&b)
+	actual := a.DivV(b)
 
 	if actual != expected {
 		t.Errorf("DivV: %v should be %v", actual, expected)
@@ -228,7 +228,7 @@ func TestDiv(t *testing.T) {
 		Y: 13.95,
 		Z: 0.2245,
 	}
-	actual, _ := a.Div(b)
+	actual := a.Div(b)
 
 	if actual != expected {
 		t.Errorf("Div: %v should be %v", actual, expected)
@@ -239,26 +239,31 @@ func TestDivV0(t *testing.T) {
 	a := algebra.Vector{X: 2.9, Y: 55.8, Z: .898}
 	b := algebra.Vector{X: .0, Y: .0, Z: .0}
 
-	actual, err := a.DivV(&b)
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("Should panic")
+		}
+	}()
+	actual := a.DivV(b)
 
-	if err == nil {
-		t.Errorf("Div by 0 should error")
-	}
 	if actual != algebra.VectorIdentity {
-		t.Errorf("Should return the Identity vector")
+		t.Errorf("Should not get here")
 	}
 }
 
 func TestDiv0(t *testing.T) {
 	a := algebra.Vector{X: 2.9, Y: 55.8, Z: .898}
-	b := .0
 
-	actual, err := a.Div(b)
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("Should panic")
+		}
+	}()
+	actual := a.Div(.0)
 
-	if err == nil {
-		t.Errorf("Div by 0 should error")
-	}
 	if actual != algebra.VectorIdentity {
-		t.Errorf("Should return the Identity vector")
+		t.Errorf("Should not get here")
 	}
 }

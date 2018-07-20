@@ -1,7 +1,6 @@
 package algebra
 
 import (
-	"errors"
 	"math"
 )
 
@@ -48,7 +47,7 @@ func (v *Vector) Scale(s float64) Vector {
 }
 
 // MaxV return a new vector with the largest parts of each
-func (v *Vector) MaxV(o *Vector) Vector {
+func (v *Vector) MaxV(o Vector) Vector {
 	return Vector{
 		X: math.Max(o.X, v.X),
 		Y: math.Max(o.Y, v.Y),
@@ -58,12 +57,12 @@ func (v *Vector) MaxV(o *Vector) Vector {
 }
 
 // Dot dot product of two vectors
-func (v *Vector) Dot(o *Vector) float64 {
+func (v *Vector) Dot(o Vector) float64 {
 	return v.X*o.X + v.Y*o.Y + v.Z*o.Z
 }
 
 // Cross a vector that is perpendicular to both a and b
-func (v *Vector) Cross(o *Vector) Vector {
+func (v *Vector) Cross(o Vector) Vector {
 	return Vector{
 		v.Y*o.Z - v.Z*o.Y,
 		v.Z*o.X - v.X*o.Z,
@@ -83,79 +82,79 @@ func (v *Vector) Normalized() Vector {
 }
 
 // AddV adds two vectors together
-func (v *Vector) AddV(r *Vector) (Vector, error) {
+func (v *Vector) AddV(r Vector) Vector {
 	return Vector{
 		X: v.X + r.X,
 		Y: v.Y + r.Y,
 		Z: v.Z + r.Z,
-	}, nil
+	}
 }
 
 // Add add a value to a vector
-func (v *Vector) Add(r float64) (Vector, error) {
+func (v *Vector) Add(r float64) Vector {
 	return Vector{
 		X: v.X + r,
 		Y: v.Y + r,
 		Z: v.Z + r,
-	}, nil
+	}
 }
 
 // SubV subtracts two vectors
-func (v *Vector) SubV(r *Vector) (Vector, error) {
+func (v *Vector) SubV(r Vector) Vector {
 	return Vector{
 		X: v.X - r.X,
 		Y: v.Y - r.Y,
 		Z: v.Z - r.Z,
-	}, nil
+	}
 }
 
 // Sub subtracts a value to a vector
-func (v *Vector) Sub(r float64) (Vector, error) {
+func (v *Vector) Sub(r float64) Vector {
 	return Vector{
 		X: v.X - r,
 		Y: v.Y - r,
 		Z: v.Z - r,
-	}, nil
+	}
 }
 
 // MulV multiply one vector with another
-func (v *Vector) MulV(r *Vector) (Vector, error) {
+func (v *Vector) MulV(r Vector) Vector {
 	return Vector{
 		X: v.X * r.X,
 		Y: v.Y * r.Y,
 		Z: v.Z * r.Z,
-	}, nil
+	}
 }
 
 // Mul multiply a vector by a number
-func (v *Vector) Mul(r float64) (Vector, error) {
+func (v *Vector) Mul(r float64) Vector {
 	return Vector{
 		X: v.X * r,
 		Y: v.Y * r,
 		Z: v.Z * r,
-	}, nil
+	}
 }
 
 // DivV divide a vector by another vector
-func (v *Vector) DivV(r *Vector) (Vector, error) {
+func (v *Vector) DivV(r Vector) Vector {
 	if r.X == .0 || r.Y == .0 || r.Z == 0 {
-		return VectorIdentity, errors.New("Can not divide by zero")
+		panic("Can not divide vector by vector with a zero")
 	}
 	return Vector{
 		X: v.X / r.X,
 		Y: v.Y / r.Y,
 		Z: v.Z / r.Z,
-	}, nil
+	}
 }
 
 // Div divide a vector by a number
-func (v *Vector) Div(r float64) (Vector, error) {
+func (v *Vector) Div(r float64) Vector {
 	if r == .0 {
-		return VectorIdentity, errors.New("Can not divide by zero")
+		panic("Can not divide vector by zero")
 	}
 	return Vector{
 		X: v.X / r,
 		Y: v.Y / r,
 		Z: v.Z / r,
-	}, nil
+	}
 }
