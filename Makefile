@@ -21,9 +21,16 @@ build:
 
 clean:
 	go clean -i
+	rm -rf doco
 
 test:
 	cd algebra; go test
+	cd geometry; go test
 
 install:
 	go install
+
+docs:
+	mkdir doco
+	godoc -html ./algebra > ./doco/algebra.html
+	godoc -html ./geometry > ./doco/geometry.html

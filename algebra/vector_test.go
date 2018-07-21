@@ -1,6 +1,7 @@
 package algebra_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/therohans/mesh/algebra"
@@ -104,6 +105,17 @@ func TestNormalzed(t *testing.T) {
 
 	if actual != expected {
 		t.Errorf("Normalized: %v should be %v", actual, expected)
+	}
+}
+
+func TestNorm(t *testing.T) {
+	a := algebra.Vector{X: 2.9, Y: 55.8, Z: .898}
+
+	expected := 55.88252324296031
+	actual := a.Norm()
+
+	if actual != expected {
+		t.Errorf("Norm: %v should be %v", actual, expected)
 	}
 }
 
@@ -246,8 +258,9 @@ func TestDivV0(t *testing.T) {
 		}
 	}()
 	actual := a.DivV(b)
+	fmt.Printf("%v", actual)
 
-	if actual != algebra.VectorIdentity {
+	if actual != a {
 		t.Errorf("Should not get here")
 	}
 }
@@ -262,8 +275,9 @@ func TestDiv0(t *testing.T) {
 		}
 	}()
 	actual := a.Div(.0)
+	fmt.Printf("%v", actual)
 
-	if actual != algebra.VectorIdentity {
+	if actual != a {
 		t.Errorf("Should not get here")
 	}
 }

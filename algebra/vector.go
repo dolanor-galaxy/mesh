@@ -81,6 +81,11 @@ func (v *Vector) Normalized() Vector {
 	}
 }
 
+// Norm assign a strictly positive length or size
+func (v *Vector) Norm() float64 {
+	return math.Sqrt(math.Pow(v.X, 2) + math.Pow(v.Y, 2) + math.Pow(v.Z, 2))
+}
+
 // AddV adds two vectors together
 func (v *Vector) AddV(r Vector) Vector {
 	return Vector{
