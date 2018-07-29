@@ -15,4 +15,8 @@ func TestVertex(t *testing.T) {
 	if vx.Pos != v {
 		t.Errorf("Vertex: should be not be nil")
 	}
+
+	if geometry.VertexSize != 14 {
+		t.Errorf("Vertex Size: should be 14")
+	}
 }

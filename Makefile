@@ -1,14 +1,17 @@
 clean:
 	go clean -i
 	rm -rf doco
+	rm -rf dist
 
 test:
 	cd algebra; go test
 	cd geometry; go test
 	cd render; go test
 
-build:
-	go build hello.go
+build: clean
+	mkdir dist
+	go build -o dist/mesh
+	cp -R assets dist/assets
 
 deps:
 	# SDL 2

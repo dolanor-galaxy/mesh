@@ -1,18 +1,15 @@
 package render
 
 import (
-	"C"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"path/filepath"
-
-	gl "github.com/chsc/gogl/gl21"
-
 	"math"
+	"path/filepath"
 	"strings"
 
+	gl "github.com/chsc/gogl/gl21"
 	"github.com/therohans/mesh/geometry"
 )
 
@@ -115,7 +112,7 @@ func compileStatus(shader gl.Uint) (gl.Uint, error) {
 }
 
 // InitOpenGl startup OpenGl
-func InitOpenGl(width int32, height int32) {
+func initOpenGl(width int32, height int32) {
 	gl.Init()
 	version := gl.GoStringUb(gl.GetString(gl.VERSION))
 	log.Println("OpenGL version", version)
@@ -178,18 +175,6 @@ func UseProgram() Program {
 	}
 }
 
-// StartDrawGl do any prep work before starting draw
-func StartDrawGl() {
-	gl.ClearColor(1, 1, 1, 1)
-	// Swap program if needed...
-	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-}
-
-// EndDrawGl Finish up any bits after a draw cycle
-func EndDrawGl() {
-
-}
-
 var (
 	uniRoll  float32
 	uniYaw   float32 = 1.0
@@ -201,7 +186,7 @@ var (
 )
 
 // DrawGl draw gl
-func DrawGl(mesh Mesh, program Program) {
+func drawGl(mesh Mesh, program Program) {
 	uniYaw = yrot * (math.Pi / 180.0)
 	yrot = yrot - 1.0
 	uniPitch = zrot * (math.Pi / 180.0)
