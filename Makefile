@@ -1,3 +1,14 @@
+clean:
+	go clean -i
+	rm -rf doco
+
+test:
+	cd algebra; go test
+	cd geometry; go test
+	cd render; go test
+
+build:
+	go build hello.go
 
 deps:
 	# SDL 2
@@ -16,17 +27,6 @@ deps:
 	go get -u github.com/go-gl/gl/v2.1/gl
 	go get -v github.com/chsc/gogl/gl33
 
-build:
-	go build hello.go
-
-clean:
-	go clean -i
-	rm -rf doco
-
-test:
-	cd algebra; go test
-	cd geometry; go test
-
 install:
 	go install
 
@@ -34,3 +34,4 @@ docs:
 	mkdir doco
 	godoc -html ./algebra > ./doco/algebra.html
 	godoc -html ./geometry > ./doco/geometry.html
+	godoc -html ./render > ./doco/render.html

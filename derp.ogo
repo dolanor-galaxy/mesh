@@ -2,38 +2,42 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"math"
 	"runtime"
+	"time"
 
 	"github.com/therohans/mesh/algebra"
 	"github.com/therohans/mesh/geometry"
-
 	"github.com/therohans/mesh/render"
+
+	gl "github.com/chsc/gogl/gl21"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-const (
-	winTitle  = "OpenGL Shader"
-	winWidth  = 640
-	winHeight = 480
-)
+var uniRoll float32 = 0.0
+var uniYaw float32 = 1.0
+var uniPitch float32 = 0.0
+var uniscale float32 = 0.3
+var yrot float32 = 20.0
+var zrot float32 = 0.0
+var xrot float32 = 0.0
+
+// var UniScale gl.Int
 
 func main() {
 	var window *sdl.Window
 	var context sdl.GLContext
-
+	var event sdl.Event
+	var running bool
 	var err error
 	runtime.LockOSThread()
 	if err = sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}
 	defer sdl.Quit()
-	window, err = sdl.CreateWindow(
-		winTitle,
+	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED,
 		sdl.WINDOWPOS_UNDEFINED,
-		sdl.WINDOWPOS_UNDEFINED,
-		winWidth, winHeight,
-		sdl.WINDOW_OPENGL)
+		winWidth, winHeight, sdl.WINDOW_OPENGL)
 	if err != nil {
 		panic(err)
 	}
@@ -43,66 +47,94 @@ func main() {
 		panic(err)
 	}
 	defer sdl.GLDeleteContext(context)
+	////////////////////////////////////////////////////////
 
 	render.InitOpenGl(winWidth, winHeight)
 
-	GameLoop(window)
-}
-
-// GameLoop main game loop
-func GameLoop(window *sdl.Window) {
-	var running bool
-	var event sdl.Event
-
-	///////////////////////////////////
-	lastTime := sdl.GetTicks()
-	nbFrames := 0
-	///////////////////////////////////
-
+	////////////////////////////////////////////////////////
 	poly, err := buildTestObject()
 	if err != nil {
 		panic("Can't load test object")
 	}
 	mesh := render.PolyToGpu(poly)
+	fmt.Printf("%v", mesh.Resource.VertBuffer)
+	////////////////////////////////////////////////////////
 
-	// Load the program and bind all the locations
+	// VERTEX BUFFER
+	var vertexbuffer gl.Uint
+	gl.GenBuffers(1, &vertexbuffer)
+	gl.BindBuffer(gl.ARRAY_BUFFER, vertexbuffer)
+	gl.BufferData(gl.ARRAY_BUFFER,
+		gl.Sizeiptr(len(mesh.Resource.VertBuffer)*4),
+		gl.Pointer(&mesh.Resource.VertBuffer[0]),
+		gl.STATIC_DRAW)
+
+	////////////////////////////////////////////////////////
 	program := render.UseProgram()
+	// posLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("Pos")))
+	// colorLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("Color")))
+	// texCoordLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("TexCoord")))
+	// normalLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("Normal")))
+	// tangentLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("Tangent")))
+
+	bpe := gl.Sizei(geometry.VertexSize * 4)
+	// gl.EnableVertexAttribArray(posLoc)
+	// gl.EnableVertexAttribArray(colorLoc)
+	// gl.EnableVertexAttribArray(texCoordLoc)
+	// gl.EnableVertexAttribArray(normalLoc)
+	// gl.EnableVertexAttribArray(tangentLoc)
+
+	gl.BindBuffer(gl.ARRAY_BUFFER, vertexbuffer)
+
+	gl.VertexAttribPointer(program.PosLoc, 3, gl.FLOAT, gl.FALSE, bpe, gl.Offset(nil, uintptr(0)))
+	gl.VertexAttribPointer(program.ColorLoc, 3, gl.FLOAT, gl.FALSE, bpe, gl.Offset(nil, uintptr(3*4)))
+	gl.VertexAttribPointer(program.TexCoordLoc, 2, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(6*4)))
+	gl.VertexAttribPointer(program.NormalLoc, 3, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(8*4)))
+	gl.VertexAttribPointer(program.TangentLoc, 3, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(11*4)))
+
+	//UNIFORM HOOK
+	// unistring := gl.GLString("scaleMove")
+	// UniScale = gl.GetUniformLocation(program.Program, unistring)
+	// fmt.Printf("Uniform Link: %v\n", UniScale+1)
 
 	running = true
 	for running {
-
 		for event = sdl.PollEvent(); event != nil; event =
 			sdl.PollEvent() {
 			switch t := event.(type) {
 			case *sdl.QuitEvent:
 				running = false
 			case *sdl.MouseMotionEvent:
-				// xrot = float32(t.Y) / 2
-				// yrot = float32(t.X) / 2
+
+				xrot = float32(t.Y) / 2
+				yrot = float32(t.X) / 2
 				fmt.Printf("[%dms]MouseMotion\tid:%d\tx:%d\ty:%d\txrel:%d\tyrel:%d\n", t.Timestamp, t.Which, t.X, t.Y, t.XRel, t.YRel)
 			}
 		}
-		render.StartDrawGl()
-		render.DrawGl(mesh, program)
-		render.EndDrawGl()
+
+		drawgl(mesh, program)
 
 		window.GLSwap()
-
-		///////////////////////////////////
-		// Measure speed
-		currentTime := sdl.GetTicks()
-		nbFrames++
-		if currentTime-lastTime >= 1.0 {
-			log.Printf("%v ms / Frame\n", 1000.0/nbFrames)
-			nbFrames = 0
-			lastTime += 1.0
-		}
-		///////////////////////////////////
-		// time.Sleep(50 * time.Millisecond)
 	}
 }
 
-///////////////////////////////////////////////////////////
+func drawgl(mesh render.Mesh, program render.Program) {
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+	uniYaw = yrot * (math.Pi / 180.0)
+	yrot = yrot - 1.0
+	uniPitch = zrot * (math.Pi / 180.0)
+	zrot = zrot - 0.5
+	uniRoll = xrot * (math.Pi / 180.0)
+	xrot = xrot - 0.2
+
+	gl.Uniform4f(program.UniScale, gl.Float(uniRoll), gl.Float(uniYaw), gl.Float(uniPitch), gl.Float(uniscale))
+
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	gl.DrawArrays(gl.TRIANGLES, gl.Int(0), gl.Sizei(len(mesh.Resource.VertBuffer)*4))
+
+	time.Sleep(50 * time.Millisecond)
+}
 
 func buildTestObject() (geometry.Polyhedron, error) {
 	modelData := phoCube
@@ -179,3 +211,9 @@ var phoCube = []float64{
 	1.0, 1.0, 1.0, 0.673, 0.211, 0.457,
 	-1.0, 1.0, 1.0, 0.820, 0.883, 0.371,
 	1.0, -1.0, 1.0, 0.982, 0.099, 0.879}
+
+const (
+	winTitle  = "OpenGL Shader"
+	winWidth  = 640
+	winHeight = 480
+)
