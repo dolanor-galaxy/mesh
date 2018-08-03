@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math"
 	"path/filepath"
 	"strings"
 
@@ -111,24 +110,6 @@ func compileStatus(shader gl.Uint) (gl.Uint, error) {
 	return gl.TRUE, nil
 }
 
-// InitOpenGl startup OpenGl
-func initOpenGl(width int32, height int32) {
-	gl.Init()
-	version := gl.GoStringUb(gl.GetString(gl.VERSION))
-	log.Println("OpenGL version", version)
-	gl.Viewport(0, 0, gl.Sizei(width), gl.Sizei(height))
-
-	// OpenGL flags
-	gl.Enable(gl.DEPTH_TEST)
-	gl.DepthFunc(gl.LESS)
-	gl.Enable(gl.BLEND)
-	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-
-	if gl.GetError() != gl.NO_ERROR {
-		fmt.Printf("Initialzation failed")
-	}
-}
-
 // UseProgram uses a program
 func UseProgram() Program {
 	program, err := CreateProgram(
@@ -143,70 +124,58 @@ func UseProgram() Program {
 	// Uniforms
 	unistring := gl.GLString("scaleMove")
 	uniScale := gl.GetUniformLocation(program, unistring)
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("GetUniformLocation not found.")
+	}
 
 	// Attributes
-	posLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("Pos")))
-	colorLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("Color")))
-	texCoordLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("TexCoord")))
-	normalLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("Normal")))
-	tangentLoc := gl.Uint(gl.GetAttribLocation(program, gl.GLString("Tangent")))
+	posLoc := gl.GetAttribLocation(program, gl.GLString("Pos"))
+	if posLoc == -1 {
+		log.Printf("Position attribute not found.")
+	}
+	colorLoc := gl.GetAttribLocation(program, gl.GLString("Color"))
+	if colorLoc == -1 {
+		log.Printf("Color attribute not found.")
+	}
+	texCoordLoc := gl.GetAttribLocation(program, gl.GLString("TexCoord"))
+	if texCoordLoc == -1 {
+		log.Printf("TexCoord attribute not found.")
+	}
+	normalLoc := gl.GetAttribLocation(program, gl.GLString("Normal"))
+	if normalLoc == -1 {
+		log.Printf("Normal attribute not found.")
+	}
+	tangentLoc := gl.GetAttribLocation(program, gl.GLString("Tangent"))
+	if tangentLoc == -1 {
+		log.Printf("Tangent attribute not found.")
+	}
 
-	gl.EnableVertexAttribArray(posLoc)
-	gl.EnableVertexAttribArray(colorLoc)
-	gl.EnableVertexAttribArray(texCoordLoc)
-	gl.EnableVertexAttribArray(normalLoc)
-	gl.EnableVertexAttribArray(tangentLoc)
+	gl.EnableVertexAttribArray(gl.Uint(posLoc))
+	gl.EnableVertexAttribArray(gl.Uint(colorLoc))
+	gl.EnableVertexAttribArray(gl.Uint(texCoordLoc))
+	gl.EnableVertexAttribArray(gl.Uint(normalLoc))
+	gl.EnableVertexAttribArray(gl.Uint(tangentLoc))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("EnableVertexAttribArray failed.")
+	}
 
 	bpe := gl.Sizei(geometry.VertexSize * 4)
-	gl.VertexAttribPointer(posLoc, 3, gl.FLOAT, gl.FALSE, bpe, gl.Offset(nil, uintptr(0)))
-	gl.VertexAttribPointer(colorLoc, 3, gl.FLOAT, gl.FALSE, bpe, gl.Offset(nil, uintptr(3*4)))
-	gl.VertexAttribPointer(texCoordLoc, 2, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(6*4)))
-	gl.VertexAttribPointer(normalLoc, 3, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(8*4)))
-	gl.VertexAttribPointer(tangentLoc, 3, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(11*4)))
+	gl.VertexAttribPointer(gl.Uint(posLoc), 3, gl.FLOAT, gl.FALSE, bpe, gl.Offset(nil, uintptr(0)))
+	gl.VertexAttribPointer(gl.Uint(colorLoc), 3, gl.FLOAT, gl.FALSE, bpe, gl.Offset(nil, uintptr(3*4)))
+	gl.VertexAttribPointer(gl.Uint(texCoordLoc), 2, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(6*4)))
+	gl.VertexAttribPointer(gl.Uint(normalLoc), 3, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(8*4)))
+	gl.VertexAttribPointer(gl.Uint(tangentLoc), 3, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(11*4)))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("VertexAttribPointer failed.")
+	}
 
 	return Program{
 		Program:     program,
-		PosLoc:      posLoc,
-		ColorLoc:    colorLoc,
-		TexCoordLoc: texCoordLoc,
-		NormalLoc:   normalLoc,
-		TangentLoc:  tangentLoc,
+		PosLoc:      gl.Uint(posLoc),
+		ColorLoc:    gl.Uint(colorLoc),
+		TexCoordLoc: gl.Uint(texCoordLoc),
+		NormalLoc:   gl.Uint(normalLoc),
+		TangentLoc:  gl.Uint(tangentLoc),
 		UniScale:    uniScale,
-	}
-}
-
-var (
-	uniRoll  float32
-	uniYaw   float32 = 1.0
-	uniPitch float32
-	uniscale float32 = 0.3
-	yrot     float32 = 20.0
-	zrot     float32
-	xrot     float32
-)
-
-// DrawGl draw gl
-func drawGl(mesh Mesh, program Program) {
-	uniYaw = yrot * (math.Pi / 180.0)
-	yrot = yrot - 1.0
-	uniPitch = zrot * (math.Pi / 180.0)
-	zrot = zrot - 0.5
-	uniRoll = xrot * (math.Pi / 180.0)
-	xrot = xrot - 0.2
-
-	gl.Uniform4f(program.UniScale,
-		gl.Float(uniRoll),
-		gl.Float(uniYaw),
-		gl.Float(uniPitch),
-		gl.Float(uniscale))
-
-	gl.DrawElements(gl.TRIANGLES,
-		gl.Sizei(mesh.Resource.Size),
-		gl.UNSIGNED_SHORT,
-		gl.Offset(nil, 0))
-
-	err := gl.GetError()
-	if err != gl.NO_ERROR {
-		fmt.Printf("Draw elements failed: %v", err)
 	}
 }

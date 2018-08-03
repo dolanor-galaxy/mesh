@@ -12,6 +12,10 @@ varying vec3 fragmentColor;
 
 void main()
 {
+  // If we don't use attributes they get dropped out
+  // and GetAttribLocation fails to find them
+  vec3 val = vec3(TexCoord, 1) * Normal * Tangent;
+
   // vec4 scaleMove = vec4(1,1,1,1);
   // YOU CAN OPTIMISE OUT cos(scaleMove.x) AND sin(scaleMove.y) AND UNIFORM THE VALUES IN
   vec3 scale = Pos.xyz * scaleMove.w;
@@ -28,6 +32,7 @@ void main()
   vec3 persp = vec3( move.x  / ( (move.z + 2) / 3 ),
 		                 move.y  / ( (move.z + 2) / 3 ),
 		                                        move.z);
+
 
   fragmentColor = Color.xyz; // vec3(.5,.5,.5); // vec3(Color.x, .5, .5);
 

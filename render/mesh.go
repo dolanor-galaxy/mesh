@@ -26,6 +26,7 @@ type MeshResource struct {
 
 // Mesh a polyhedron and metadata
 type Mesh struct {
+	Name     string
 	Poly     geometry.Polyhedron
 	Resource MeshResource
 }

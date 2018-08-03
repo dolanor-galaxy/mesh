@@ -4,6 +4,7 @@ import (
 	"log"
 	"runtime"
 
+	"github.com/therohans/mesh/core"
 	"github.com/therohans/mesh/model"
 	"github.com/therohans/mesh/render"
 	"github.com/veandco/go-sdl2/sdl"
@@ -26,12 +27,18 @@ func main() {
 	}
 	defer sdl.Quit()
 
+	sdl.GLSetAttribute(sdl.GL_RED_SIZE, 5)
+	sdl.GLSetAttribute(sdl.GL_GREEN_SIZE, 5)
+	sdl.GLSetAttribute(sdl.GL_BLUE_SIZE, 5)
+	sdl.GLSetAttribute(sdl.GL_DEPTH_SIZE, 16)
+	sdl.GLSetAttribute(sdl.GL_DOUBLEBUFFER, 1)
+
 	window, err = sdl.CreateWindow(
 		winTitle,
 		sdl.WINDOWPOS_UNDEFINED,
 		sdl.WINDOWPOS_UNDEFINED,
 		winWidth, winHeight,
-		sdl.WINDOW_OPENGL)
+		sdl.WINDOW_OPENGL) //|sdl.WINDOW_FULLSCREEN)
 	if err != nil {
 		panic(err)
 	}
@@ -55,17 +62,30 @@ func GameLoop(window *sdl.Window) {
 	nbFrames := 0
 	///////////////////////////////////
 
-	renderSystem := render.System{}
-	renderSystem.Init(winWidth, winHeight)
+	settings := core.Settings{
+		Width:  winWidth,
+		Height: winHeight,
+	}
 
+	renderSystem := render.System{}
+	renderSystem.Initialize(settings)
+
+	///////////////////////////////////
 	poly, err := model.CreateTestPoly()
 	if err != nil {
 		panic("Can't load test object")
 	}
 	// Send the object the GPU (create buffers)
 	mesh := render.CreateMesh(poly)
-	// Load the program and bind all the locations
-	skin := render.UseProgram()
+	shader := render.Shader{
+		Name:    "default",
+		Program: render.UseProgram(),
+	}
+	material := render.Material{
+		Shader: shader,
+	}
+	// fmt.Printf("%v\n%v\n", mesh, material)
+	///////////////////////////////////
 
 	running = true
 	for running {
@@ -85,7 +105,7 @@ func GameLoop(window *sdl.Window) {
 
 		///////////////////////////////////
 		// Render
-		renderSystem.Render(mesh, skin)
+		renderSystem.Render(mesh, material)
 		window.GLSwap()
 
 		///////////////////////////////////
@@ -93,7 +113,7 @@ func GameLoop(window *sdl.Window) {
 		currentTime := sdl.GetTicks()
 		nbFrames++
 		if currentTime-lastTime >= 1.0 {
-			log.Printf("%v ms / Frame\n", 1000.0/nbFrames)
+			// log.Printf("%v ms / Frame\n", 1000.0/nbFrames)
 			nbFrames = 0
 			lastTime += 1.0
 		}
