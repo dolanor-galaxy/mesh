@@ -8,6 +8,9 @@ test:
 	cd geometry; go test
 	cd render; go test
 
+start:
+	go run main.go
+
 build: clean
 	mkdir dist
 	go build -o dist/mesh

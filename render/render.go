@@ -38,22 +38,19 @@ func (r *System) InitSystem(s core.Settings, fn RenderInitializer) {
 }
 
 // Render render a mesh
-func (r *System) Render(mesh Mesh, material Material) {
-	r.Draw(mesh, material, drawGl)
+func (r *System) Render(mesh Mesh, material Material) error {
+	return r.Draw(mesh, material, drawGl)
 }
 
 // Draw call the opengl draw code directly
-func (r *System) Draw(mesh Mesh, mat Material, fn RenderDrawer) {
-	err := fn(mesh, mat)
-	if err != nil {
-		panic(err)
-	}
+func (r *System) Draw(mesh Mesh, mat Material, fn RenderDrawer) error {
+	return fn(mesh, mat)
 }
 
 //////////////////////////////////////////////////////////////
 
 // InitOpenGl startup OpenGl
-func initOpenGl(width int32, height int32) error {
+func initOpenGl(width, height int32) error {
 	gl.Init()
 	version := gl.GoStringUb(gl.GetString(gl.VERSION))
 	log.Println("OpenGL version", version)

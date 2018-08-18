@@ -45,7 +45,8 @@ func TestQuatNormalzed(t *testing.T) {
 		Z: 0.016022062509458843,
 		W: 0.076720343864892,
 	}
-	actual := q.Normalized()
+	actual := algebra.Quaternion{}
+	q.Normalized(&actual)
 
 	if actual != expected {
 		t.Errorf("Normalized: %v should be %v", actual, expected)
@@ -61,7 +62,8 @@ func TestQuatConjugate(t *testing.T) {
 		Z: -.898,
 		W: 4.3,
 	}
-	actual := q.Conjugate()
+	actual := algebra.Quaternion{}
+	q.Conjugate(&actual)
 
 	if actual != expected {
 		t.Errorf("Conjugate: %v should be %v", actual, expected)
@@ -77,7 +79,8 @@ func TestQuatMul(t *testing.T) {
 		Z: 1.796,
 		W: 8.6,
 	}
-	actual := q.Mul(2)
+	actual := algebra.Quaternion{}
+	q.Mul(2, &actual)
 
 	if actual != expected {
 		t.Errorf("Mul: %v should be %v", actual, expected)
@@ -108,7 +111,8 @@ func TestQuatMulQ(t *testing.T) {
 		W: -309.7356,
 	}
 
-	actual := q.MulQ(q2)
+	actual := algebra.Quaternion{}
+	q.MulQ(q2, &actual)
 
 	if actual != expected {
 		t.Errorf("MulQ: %v should be %v", actual, expected)
@@ -119,14 +123,15 @@ func TestQuatMulV(t *testing.T) {
 	q := algebra.Quaternion{X: 2.9, Y: 55.8, Z: .898, W: 4.3}
 	v := algebra.Vector{X: .9, Y: 5.8, Z: 2.2}
 
-	expected := algebra.Quaternion{
+	expected := algebra.Vector{
 		X: 121.42160000000001,
 		Y: 19.368199999999998,
 		Z: -23.939999999999998,
 		W: -328.2256,
 	}
 
-	actual := q.MulV(v)
+	actual := algebra.Vector{}
+	q.MulV(v, &actual)
 
 	if actual != expected {
 		t.Errorf("MulV: %v should be %v", actual, expected)
@@ -139,7 +144,8 @@ func TestQuatSubQ(t *testing.T) {
 
 	expected := algebra.Quaternion{X: 2, Y: 50, Z: -1.302, W: 0}
 
-	actual := q.SubQ(q2)
+	actual := algebra.Quaternion{}
+	q.SubQ(q2, &actual)
 
 	if actual != expected {
 		t.Errorf("SubQ: %v should be %v", actual, expected)
@@ -153,7 +159,8 @@ func TestQuatAddQ(t *testing.T) {
 	expected := algebra.Quaternion{
 		X: 3.8, Y: 61.599999999999994, Z: 3.0980000000000003, W: 8.6}
 
-	actual := q.AddQ(q2)
+	actual := algebra.Quaternion{}
+	q.AddQ(q2, &actual)
 
 	if actual != expected {
 		t.Errorf("AddQ: %v should be %v", actual, expected)

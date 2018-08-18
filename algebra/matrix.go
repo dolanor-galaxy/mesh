@@ -140,7 +140,10 @@ func (m *Matrix) InitRotation(p Vector) {
 	ry[3][2] = 0
 	ry[3][3] = 1
 
-	mul := rz.Mul(ry.Mul(rx))
+	mul := Matrix{}
+	ry.Mul(rx, &mul)
+	rz.Mul(mul, &mul)
+	// mul := rz.Mul(ry.Mul(rx))
 
 	m[0] = mul[0]
 	m[1] = mul[1]
@@ -209,9 +212,7 @@ func (m *Matrix) InitPerspective(o PerspectiveOptions) {
 }
 
 // Mul multiply two matries returning a new Matrix
-func (m *Matrix) Mul(r Matrix) Matrix {
-	res := Matrix{}
-
+func (m *Matrix) Mul(r Matrix, out *Matrix) {
 	// This looks nasty, but it's just an unwinding of the below
 	// loop.  This needs to be really fast.
 	// for (let i = 0; i < 4; i++) {
@@ -225,75 +226,73 @@ func (m *Matrix) Mul(r Matrix) Matrix {
 	//   }
 	// }
 
-	res[0][0] = m[0][0]*r[0][0] +
+	out[0][0] = m[0][0]*r[0][0] +
 		m[0][1]*r[1][0] +
 		m[0][2]*r[2][0] +
 		m[0][3]*r[3][0]
-	res[0][1] = m[0][0]*r[0][1] +
+	out[0][1] = m[0][0]*r[0][1] +
 		m[0][1]*r[1][1] +
 		m[0][2]*r[2][1] +
 		m[0][3]*r[3][1]
-	res[0][2] = m[0][0]*r[0][2] +
+	out[0][2] = m[0][0]*r[0][2] +
 		m[0][1]*r[1][2] +
 		m[0][2]*r[2][2] +
 		m[0][3]*r[3][2]
-	res[0][3] = m[0][0]*r[0][3] +
+	out[0][3] = m[0][0]*r[0][3] +
 		m[0][1]*r[1][3] +
 		m[0][2]*r[2][3] +
 		m[0][3]*r[3][3]
 
-	res[1][0] = m[1][0]*r[0][0] +
+	out[1][0] = m[1][0]*r[0][0] +
 		m[1][1]*r[1][0] +
 		m[1][2]*r[2][0] +
 		m[1][3]*r[3][0]
-	res[1][1] = m[1][0]*r[0][1] +
+	out[1][1] = m[1][0]*r[0][1] +
 		m[1][1]*r[1][1] +
 		m[1][2]*r[2][1] +
 		m[1][3]*r[3][1]
-	res[1][2] = m[1][0]*r[0][2] +
+	out[1][2] = m[1][0]*r[0][2] +
 		m[1][1]*r[1][2] +
 		m[1][2]*r[2][2] +
 		m[1][3]*r[3][2]
-	res[1][3] = m[1][0]*r[0][3] +
+	out[1][3] = m[1][0]*r[0][3] +
 		m[1][1]*r[1][3] +
 		m[1][2]*r[2][3] +
 		m[1][3]*r[3][3]
 
-	res[2][0] = m[2][0]*r[0][0] +
+	out[2][0] = m[2][0]*r[0][0] +
 		m[2][1]*r[1][0] +
 		m[2][2]*r[2][0] +
 		m[2][3]*r[3][0]
-	res[2][1] = m[2][0]*r[0][1] +
+	out[2][1] = m[2][0]*r[0][1] +
 		m[2][1]*r[1][1] +
 		m[2][2]*r[2][1] +
 		m[2][3]*r[3][1]
-	res[2][2] = m[2][0]*r[0][2] +
+	out[2][2] = m[2][0]*r[0][2] +
 		m[2][1]*r[1][2] +
 		m[2][2]*r[2][2] +
 		m[2][3]*r[3][2]
-	res[2][3] = m[2][0]*r[0][3] +
+	out[2][3] = m[2][0]*r[0][3] +
 		m[2][1]*r[1][3] +
 		m[2][2]*r[2][3] +
 		m[2][3]*r[3][3]
 
-	res[3][0] = m[3][0]*r[0][0] +
+	out[3][0] = m[3][0]*r[0][0] +
 		m[3][1]*r[1][0] +
 		m[3][2]*r[2][0] +
 		m[3][3]*r[3][0]
-	res[3][1] = m[3][0]*r[0][1] +
+	out[3][1] = m[3][0]*r[0][1] +
 		m[3][1]*r[1][1] +
 		m[3][2]*r[2][1] +
 		m[3][3]*r[3][1]
-	res[3][2] = m[3][0]*r[0][2] +
+	out[3][2] = m[3][0]*r[0][2] +
 		m[3][1]*r[1][2] +
 		m[3][2]*r[2][2] +
 		m[3][3]*r[3][2]
-	res[3][3] = m[3][0]*r[0][3] +
+	out[3][3] = m[3][0]*r[0][3] +
 		m[3][1]*r[1][3] +
 		m[3][2]*r[2][3] +
 		m[3][3]*r[3][3]
-
-	return res
 }
 
 // Transform Applies the current matrix to the given vector
@@ -303,36 +302,27 @@ func (m *Matrix) Mul(r Matrix) Matrix {
 //     [x, y, z, w] * | d e f t2 | =  x * b + y * e + z * h
 //                    | g h i t3 |    x * c + y * f + z * i
 //                    | j k l t4 |
-func (m *Matrix) Transform(r Vector) Vector {
-	return Vector{
-		//        row col
-		X: (r.X * m[0][0]) + (r.Y * m[1][0]) + (r.Z * m[2][0]) + (r.W * m[3][0]),
-		Y: (r.X * m[0][1]) + (r.Y * m[1][1]) + (r.Z * m[2][1]) + (r.W * m[3][1]),
-		Z: (r.X * m[0][2]) + (r.Y * m[1][2]) + (r.Z * m[2][2]) + (r.W * m[3][2]),
-		W: (r.X * m[0][3]) + (r.Y * m[1][3]) + (r.Z * m[2][3]) + (r.W * m[3][3]),
-	}
+func (m *Matrix) Transform(r Vector, out *Vector) {
+
+	//        row col
+	out.X = (r.X * m[0][0]) + (r.Y * m[1][0]) + (r.Z * m[2][0]) + (r.W * m[3][0])
+	out.Y = (r.X * m[0][1]) + (r.Y * m[1][1]) + (r.Z * m[2][1]) + (r.W * m[3][1])
+	out.Z = (r.X * m[0][2]) + (r.Y * m[1][2]) + (r.Z * m[2][2]) + (r.W * m[3][2])
+	out.W = (r.X * m[0][3]) + (r.Y * m[1][3]) + (r.Z * m[2][3]) + (r.W * m[3][3])
+
 }
 
 // Transpose Changes the matrix from Row-Major to Column-Major
-func (m *Matrix) Transpose() Matrix {
-	nm := Matrix{
-		{m[0][0], m[1][0], m[2][0], m[3][0]},
-		{m[0][1], m[1][1], m[2][1], m[3][1]},
-		{m[0][2], m[1][2], m[2][2], m[3][2]},
-		{m[0][3], m[1][3], m[2][3], m[3][3]},
-	}
-
-	m[0] = nm[0]
-	m[1] = nm[1]
-	m[2] = nm[2]
-	m[3] = nm[3]
-
-	return nm
+func (m *Matrix) Transpose(out *Matrix) {
+	out[0] = [4]float64{m[0][0], m[1][0], m[2][0], m[3][0]}
+	out[1] = [4]float64{m[0][1], m[1][1], m[2][1], m[3][1]}
+	out[2] = [4]float64{m[0][2], m[1][2], m[2][2], m[3][2]}
+	out[3] = [4]float64{m[0][3], m[1][3], m[2][3], m[3][3]}
 }
 
 // Inverse Because with matrices we don't divide!
 // But we can multiply by an inverse, which achieves the same thing.
-func (m *Matrix) Inverse() Matrix {
+func (m *Matrix) Inverse(out *Matrix) {
 	m00 := m[0][0]
 	m01 := m[0][1]
 	m02 := m[0][2]
@@ -389,52 +379,48 @@ func (m *Matrix) Inverse() Matrix {
 
 	d := 1.0 / (m00*t0 + m10*t1 + m20*t2 + m30*t3)
 
-	m[0][0] = d * t0
-	m[0][1] = d * t1
-	m[0][2] = d * t2
-	m[0][3] = d * t3
+	out[0][0] = d * t0
+	out[0][1] = d * t1
+	out[0][2] = d * t2
+	out[0][3] = d * t3
 
-	m[1][0] = d * ((tmp1*m10 + tmp2*m20 + tmp5*m30) -
+	out[1][0] = d * ((tmp1*m10 + tmp2*m20 + tmp5*m30) -
 		(tmp0*m10 + tmp3*m20 + tmp4*m30))
-	m[1][1] = d * ((tmp0*m00 + tmp7*m20 + tmp8*m30) -
+	out[1][1] = d * ((tmp0*m00 + tmp7*m20 + tmp8*m30) -
 		(tmp1*m00 + tmp6*m20 + tmp9*m30))
-	m[1][2] = d * ((tmp3*m00 + tmp6*m10 + tmp11*m30) -
+	out[1][2] = d * ((tmp3*m00 + tmp6*m10 + tmp11*m30) -
 		(tmp2*m00 + tmp7*m10 + tmp10*m30))
-	m[1][3] = d * ((tmp4*m00 + tmp9*m10 + tmp10*m20) -
+	out[1][3] = d * ((tmp4*m00 + tmp9*m10 + tmp10*m20) -
 		(tmp5*m00 + tmp8*m10 + tmp11*m20))
 
-	m[2][0] = d * ((tmp12*m13 + tmp15*m23 + tmp16*m33) -
+	out[2][0] = d * ((tmp12*m13 + tmp15*m23 + tmp16*m33) -
 		(tmp13*m13 + tmp14*m23 + tmp17*m33))
-	m[2][1] = d * ((tmp13*m03 + tmp18*m23 + tmp21*m33) -
+	out[2][1] = d * ((tmp13*m03 + tmp18*m23 + tmp21*m33) -
 		(tmp12*m03 + tmp19*m23 + tmp20*m33))
-	m[2][2] = d * ((tmp14*m03 + tmp19*m13 + tmp22*m33) -
+	out[2][2] = d * ((tmp14*m03 + tmp19*m13 + tmp22*m33) -
 		(tmp15*m03 + tmp18*m13 + tmp23*m33))
-	m[2][3] = d * ((tmp17*m03 + tmp20*m13 + tmp23*m23) -
+	out[2][3] = d * ((tmp17*m03 + tmp20*m13 + tmp23*m23) -
 		(tmp16*m03 + tmp21*m13 + tmp22*m23))
 
-	m[3][0] = d * ((tmp14*m22 + tmp17*m32 + tmp13*m12) -
+	out[3][0] = d * ((tmp14*m22 + tmp17*m32 + tmp13*m12) -
 		(tmp16*m32 + tmp12*m12 + tmp15*m22))
-	m[3][1] = d * ((tmp20*m32 + tmp12*m02 + tmp19*m22) -
+	out[3][1] = d * ((tmp20*m32 + tmp12*m02 + tmp19*m22) -
 		(tmp18*m22 + tmp21*m32 + tmp13*m02))
-	m[3][2] = d * ((tmp18*m12 + tmp23*m32 + tmp15*m02) -
+	out[3][2] = d * ((tmp18*m12 + tmp23*m32 + tmp15*m02) -
 		(tmp22*m32 + tmp14*m02 + tmp19*m12))
-	m[3][3] = d * ((tmp22*m22 + tmp16*m02 + tmp21*m12) -
+	out[3][3] = d * ((tmp22*m22 + tmp16*m02 + tmp21*m12) -
 		(tmp20*m12 + tmp23*m22 + tmp17*m02))
-
-	return m.Clone()
 }
 
 // Clone duplicate the matrix
-func (m *Matrix) Clone() Matrix {
-	nm := Matrix{}
-	nm[0] = m[0]
-	nm[1] = m[1]
-	nm[2] = m[2]
-	nm[3] = m[3]
-	return nm
+func (m *Matrix) Clone(out *Matrix) {
+	out[0] = m[0]
+	out[1] = m[1]
+	out[2] = m[2]
+	out[3] = m[3]
 }
 
-// AsArray return the matrix as a flat array
+// AsArray returns the matrix as a flat float32 array
 // it's 32 bit because opengl will need that. This may not
 // be the right place for this
 func (m *Matrix) AsArray() [16]float32 {

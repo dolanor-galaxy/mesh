@@ -7,13 +7,13 @@ import (
 	"github.com/therohans/mesh/render"
 )
 
-func TestRenderSystemCreate(t *testing.T) {
+func InitMockRenderSystem(t *testing.T) render.System {
 	s := core.Settings{
 		Width:  300,
 		Height: 300,
 	}
 
-	mockOpenGl := func(w, h int32) error {
+	mockInit := func(w, h int32) error {
 		if w != s.Width || h != s.Height {
 			t.Errorf("InitSystem failed")
 		}
@@ -21,24 +21,27 @@ func TestRenderSystemCreate(t *testing.T) {
 	}
 
 	rs := render.System{}
-	rs.InitSystem(s, mockOpenGl)
-}
+	rs.InitSystem(s, mockInit)
 
+	return rs
+}
 func TestRenderDraw(t *testing.T) {
 	m := render.Mesh{
-		ID: "mesh1",
+		Name: "mesh1",
 	}
 	mat := render.Material{
 		Name: "mat1",
 	}
 
-	mockDraw := func(mesh Mesh, material Material) error {
-		if w != s.Width || h != s.Height {
-			t.Errorf("InitSystem failed")
-		}
+	rs := InitMockRenderSystem(t)
+
+	mockDraw := func(mesh render.Mesh, material render.Material) error {
 		return nil
 	}
 
-	rs := render.System{}
-	rs.InitSystem(s, mockOpenGl)
+	err := rs.Draw(m, mat, mockDraw)
+	if err != nil {
+		t.Errorf("Draw call failed")
+	}
+
 }

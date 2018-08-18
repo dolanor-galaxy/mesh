@@ -4,6 +4,14 @@ import (
 	"math"
 )
 
+// Normalize vector in the same direction but with norm (length) 1
+func Normalize(out *Vector) {
+	len := out.Length()
+	out.X = out.X / len
+	out.Y = out.Y / len
+	out.Z = out.Z / len
+}
+
 // Vector a point in 3d space (or 2d)
 type Vector struct {
 	X float64
@@ -47,13 +55,11 @@ func (v *Vector) Scale(s float64) Vector {
 }
 
 // MaxV return a new vector with the largest parts of each
-func (v *Vector) MaxV(o Vector) Vector {
-	return Vector{
-		X: math.Max(o.X, v.X),
-		Y: math.Max(o.Y, v.Y),
-		Z: math.Max(o.Z, v.Z),
-		W: math.Max(o.W, v.W),
-	}
+func (v *Vector) MaxV(o Vector, out *Vector) {
+	out.X = math.Max(o.X, v.X)
+	out.Y = math.Max(o.Y, v.Y)
+	out.Z = math.Max(o.Z, v.Z)
+	out.W = math.Max(o.W, v.W)
 }
 
 // Dot dot product of two vectors
@@ -62,23 +68,19 @@ func (v *Vector) Dot(o Vector) float64 {
 }
 
 // Cross a vector that is perpendicular to both a and b
-func (v *Vector) Cross(o Vector) Vector {
-	return Vector{
-		v.Y*o.Z - v.Z*o.Y,
-		v.Z*o.X - v.X*o.Z,
-		v.X*o.Y - v.Y*o.X,
-		0.0,
-	}
+func (v *Vector) Cross(o Vector, out *Vector) {
+	out.X = v.Y*o.Z - v.Z*o.Y
+	out.Y = v.Z*o.X - v.X*o.Z
+	out.Z = v.X*o.Y - v.Y*o.X
+	out.W = 0.0
 }
 
 // Normalized vector in the same direction but with norm (length) 1
-func (v *Vector) Normalized() Vector {
+func (v *Vector) Normalized(out *Vector) {
 	len := v.Length()
-	return Vector{
-		X: v.X / len,
-		Y: v.Y / len,
-		Z: v.Z / len,
-	}
+	out.X = v.X / len
+	out.Y = v.Y / len
+	out.Z = v.Z / len
 }
 
 // Norm assign a strictly positive length or size
@@ -87,89 +89,83 @@ func (v *Vector) Norm() float64 {
 }
 
 // AddV adds two vectors together
-func (v *Vector) AddV(r Vector) Vector {
-	return Vector{
-		X: v.X + r.X,
-		Y: v.Y + r.Y,
-		Z: v.Z + r.Z,
-	}
+func (v *Vector) AddV(r Vector, out *Vector) {
+	out.X = v.X + r.X
+	out.Y = v.Y + r.Y
+	out.Z = v.Z + r.Z
 }
 
 // Add add a value to a vector
-func (v *Vector) Add(r float64) Vector {
-	return Vector{
-		X: v.X + r,
-		Y: v.Y + r,
-		Z: v.Z + r,
-	}
+func (v *Vector) Add(r float64, out *Vector) {
+	out.X = v.X + r
+	out.Y = v.Y + r
+	out.Z = v.Z + r
 }
 
 // SubV subtracts two vectors
-func (v *Vector) SubV(r Vector) Vector {
-	return Vector{
-		X: v.X - r.X,
-		Y: v.Y - r.Y,
-		Z: v.Z - r.Z,
-	}
+func (v *Vector) SubV(r Vector, out *Vector) {
+	out.X = v.X - r.X
+	out.Y = v.Y - r.Y
+	out.Z = v.Z - r.Z
 }
 
 // Sub subtracts a value to a vector
-func (v *Vector) Sub(r float64) Vector {
-	return Vector{
-		X: v.X - r,
-		Y: v.Y - r,
-		Z: v.Z - r,
-	}
+func (v *Vector) Sub(r float64, out *Vector) {
+	out.X = v.X - r
+	out.Y = v.Y - r
+	out.Z = v.Z - r
 }
 
 // MulV multiply one vector with another
-func (v *Vector) MulV(r Vector) Vector {
-	return Vector{
-		X: v.X * r.X,
-		Y: v.Y * r.Y,
-		Z: v.Z * r.Z,
-	}
+func (v *Vector) MulV(r Vector, out *Vector) {
+	out.X = v.X * r.X
+	out.Y = v.Y * r.Y
+	out.Z = v.Z * r.Z
 }
 
 // Mul multiply a vector by a number
-func (v *Vector) Mul(r float64) Vector {
-	return Vector{
-		X: v.X * r,
-		Y: v.Y * r,
-		Z: v.Z * r,
-	}
+func (v *Vector) Mul(r float64, out *Vector) {
+	out.X = v.X * r
+	out.Y = v.Y * r
+	out.Z = v.Z * r
 }
 
 // DivV divide a vector by another vector
-func (v *Vector) DivV(r Vector) Vector {
+func (v *Vector) DivV(r Vector, out *Vector) {
 	if r.X == .0 || r.Y == .0 || r.Z == 0 {
 		panic("Can not divide vector by vector with a zero")
 	}
-	return Vector{
-		X: v.X / r.X,
-		Y: v.Y / r.Y,
-		Z: v.Z / r.Z,
-	}
+	out.X = v.X / r.X
+	out.Y = v.Y / r.Y
+	out.Z = v.Z / r.Z
 }
 
 // Div divide a vector by a number
-func (v *Vector) Div(r float64) Vector {
+func (v *Vector) Div(r float64, out *Vector) {
 	if r == .0 {
 		panic("Can not divide vector by zero")
 	}
-	return Vector{
-		X: v.X / r,
-		Y: v.Y / r,
-		Z: v.Z / r,
-	}
+	out.X = v.X / r
+	out.Y = v.Y / r
+	out.Z = v.Z / r
 }
 
 // Abs absolute value of this vector
-func (v *Vector) Abs() Vector {
-	return Vector{X: math.Abs(v.X), Y: math.Abs(v.Y), Z: math.Abs(v.Z)}
+func (v *Vector) Abs(out *Vector) {
+	out.X = math.Abs(v.X)
+	out.Y = math.Abs(v.Y)
+	out.Z = math.Abs(v.Z)
 }
 
 // Magnitude the magnitude of this vector
 func (v *Vector) Magnitude() float64 {
 	return math.Sqrt(v.X*v.X + v.Y*v.Y + v.Z*v.Z)
+}
+
+// Set sets this vector's elements
+func (v *Vector) Set(x, y, z, w float64) {
+	v.X = x
+	v.Y = y
+	v.Z = z
+	v.W = w
 }

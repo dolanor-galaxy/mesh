@@ -105,7 +105,8 @@ func TestMatrixMul(t *testing.T) {
 		{1, 2, 3, 4},
 	}
 
-	m3 := m1.Mul(m2)
+	m3 := algebra.Matrix{}
+	m1.Mul(m2, &m3)
 
 	if m3 != expected {
 		t.Errorf("Expected %v to equal %v", expected, m3)
@@ -124,10 +125,11 @@ func TestTranspose(t *testing.T) {
 	p := algebra.Vector{X: 2.0, Y: 3.0, Z: 4.0, W: .0}
 
 	m.InitTranslation(p)
-	m.Transpose()
+	actual := algebra.Matrix{}
+	m.Transpose(&actual)
 
-	if m != expected {
-		t.Errorf("Transpose did something odd: %v", m)
+	if actual != expected {
+		t.Errorf("Transpose did something odd: %v %v", m, actual)
 	}
 }
 
@@ -144,7 +146,8 @@ func TestMatrixTransform(t *testing.T) {
 	}
 	p := algebra.Vector{X: 2.0, Y: 3.0, Z: 4.0, W: 8.0}
 
-	p2 := m.Transform(p)
+	p2 := algebra.Vector{}
+	m.Transform(p, &p2)
 
 	if p2 != expected {
 		t.Errorf("Transform did something odd: %v", p2)
@@ -165,7 +168,8 @@ func TestMatrixInverse(t *testing.T) {
 		{2.0, 4.0, 4.0, 1.0},
 	}
 
-	m2 := m.Inverse()
+	m2 := algebra.Matrix{}
+	m.Inverse(&m2)
 
 	if m2 != expected {
 		t.Errorf("Inverse did something odd: %v", m2)
@@ -201,7 +205,8 @@ func TestMatrixClone(t *testing.T) {
 		{10, 20, 30, 40},
 	}
 
-	m2 := m1.Clone()
+	m2 := algebra.Matrix{}
+	m1.Clone(&m2)
 
 	if m1 != m2 {
 		t.Errorf("Clone %v to equal %v", m1, m2)
