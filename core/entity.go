@@ -28,7 +28,7 @@ func (ge *Entity) Remove(e *Entity) {
 // Attach add a component to this entity
 func (ge *Entity) Attach(cmp Componenter) {
 	cmp.SetParent(ge)
-	fmt.Printf("-- %v\n", cmp.GetParent())
+	// fmt.Printf("-- %v\n", cmp.GetParent())
 	ge.components = append(ge.components, cmp)
 }
 
@@ -43,7 +43,7 @@ func (ge *Entity) GetComponent(t string) Componenter {
 		tt = fmt.Sprintf("%T", ge.components[q])
 		switch tt {
 		case t:
-			fmt.Printf("%v\n", t)
+			// fmt.Printf("%v\n", t)
 			return ge.components[q]
 			// default:
 			// fmt.Printf("Asked for: %v got %v\n", t, tt)

@@ -64,11 +64,11 @@ func (r *System) RenderScene(s *core.Scene) error {
 	entities := s.All()
 	for t := 0; t < len(entities); t++ {
 		e := entities[t]
-		fmt.Printf("Entity: %v\n", e)
+		// fmt.Printf("Entity: %v\n", e)
 
 		comp := e.GetComponent(core.ComponentTypeRender)
 		// fmt.Printf("%v\n", comp.(core.Component).ParentEntity)
-		fmt.Printf("Component: %v\n", comp)
+		// fmt.Printf("Component: %v\n", comp)
 
 		if rc, ok := comp.(*ComponentRender); ok {
 			r.Render(RenderCommand{
@@ -104,9 +104,9 @@ func (r *System) Render(command RenderCommand) error {
 	viewa := matrixAsArray(view)
 	proja := matrixAsArray(proj)
 
-	fmt.Printf("MTW: %v - %v\n", mtw, material.Shader.Program.UniWorld)
-	fmt.Printf("VIEW: %v - %v\n", viewa, material.Shader.Program.UniView)
-	fmt.Printf("PROJ: %v - %v\n", proja, material.Shader.Program.UniProject)
+	// fmt.Printf("MTW: %v - %v\n", mtw, material.Shader.Program.UniWorld)
+	// fmt.Printf("VIEW: %v - %v\n", viewa, material.Shader.Program.UniView)
+	// fmt.Printf("PROJ: %v - %v\n", proja, material.Shader.Program.UniProject)
 
 	gl.UniformMatrix4fv(material.Shader.Program.UniWorld, gl.Sizei(1), gl.FALSE, &mtw[0])
 	gl.UniformMatrix4fv(material.Shader.Program.UniView, gl.Sizei(1), gl.FALSE, &viewa[0])

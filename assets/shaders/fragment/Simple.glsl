@@ -1,7 +1,5 @@
 #version 120
 
-// precision mediump float;
-
 // struct DirectionalLight {
 //   vec3 direction;
 //   vec3 color;
@@ -23,10 +21,8 @@ void main() {
   // vec4 texel = texture2D(u_texture, v_texcoord);
 
   // gl_FragColor = vec4(u_diffuseColor.rgb * texel.rgb * lightIntensity, texel.a);
-
   gl_FragColor = vec4(v_color, 1.0);
-  // gl_FragColor = vec4(1.0, .5, .5, 1);
-
+  
   // if(gl_FragColor.a < 0.1)
   //    discard;
 }

@@ -1,7 +1,5 @@
 package core
 
-import "fmt"
-
 // Component a behavior that is usually attached to an Entity
 type Component struct {
 	Parent *Entity
@@ -16,7 +14,7 @@ func (rc *Component) GetParent() *Entity {
 
 // SetParent sets this components parent
 func (rc *Component) SetParent(e *Entity) {
-	fmt.Printf("!!!%v\n", e)
+	// fmt.Printf("!!!%v\n", e)
 	rc.Parent = e
-	fmt.Printf("!!!%v\n", rc.Parent)
+	// fmt.Printf("!!!%v\n", rc.Parent)
 }

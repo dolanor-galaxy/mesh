@@ -163,22 +163,46 @@ func UseProgram() Program {
 	}
 
 	gl.EnableVertexAttribArray(gl.Uint(posLoc))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("Pos EnableVertexAttribArray failed.")
+	}
 	gl.EnableVertexAttribArray(gl.Uint(colorLoc))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("Color EnableVertexAttribArray failed.")
+	}
 	gl.EnableVertexAttribArray(gl.Uint(texCoordLoc))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("TexCoord EnableVertexAttribArray failed.")
+	}
 	gl.EnableVertexAttribArray(gl.Uint(normalLoc))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("Normal EnableVertexAttribArray failed.")
+	}
 	gl.EnableVertexAttribArray(gl.Uint(tangentLoc))
 	if gl.GetError() != gl.NO_ERROR {
-		log.Printf("EnableVertexAttribArray failed.")
+		log.Printf("Tangent EnableVertexAttribArray failed.")
 	}
 
 	bpe := gl.Sizei(geometry.VertexSize * 4)
 	gl.VertexAttribPointer(gl.Uint(posLoc), 3, gl.FLOAT, gl.FALSE, bpe, gl.Offset(nil, uintptr(0)))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("Pos VertexAttribPointer failed.")
+	}
 	gl.VertexAttribPointer(gl.Uint(colorLoc), 3, gl.FLOAT, gl.FALSE, bpe, gl.Offset(nil, uintptr(3*4)))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("Color VertexAttribPointer failed.")
+	}
 	gl.VertexAttribPointer(gl.Uint(texCoordLoc), 2, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(6*4)))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("TexCoord VertexAttribPointer failed.")
+	}
 	gl.VertexAttribPointer(gl.Uint(normalLoc), 3, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(8*4)))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("Normal VertexAttribPointer failed.")
+	}
 	gl.VertexAttribPointer(gl.Uint(tangentLoc), 3, gl.FLOAT, gl.TRUE, bpe, gl.Offset(nil, uintptr(11*4)))
 	if gl.GetError() != gl.NO_ERROR {
-		log.Printf("VertexAttribPointer failed.")
+		log.Printf("Tangent VertexAttribPointer failed.")
 	}
 
 	return Program{

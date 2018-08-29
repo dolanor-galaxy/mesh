@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"runtime"
 
 	"github.com/therohans/mesh/algebra"
@@ -81,13 +80,14 @@ func GameLoop(window *sdl.Window) {
 		// Get input
 		for event = sdl.PollEvent(); event != nil; event =
 			sdl.PollEvent() {
-			switch t := event.(type) {
+			// switch t := event.(type) {
+			switch event.(type) {
 			case *sdl.QuitEvent:
 				running = false
-			case *sdl.MouseMotionEvent:
+				// case *sdl.MouseMotionEvent:
 				// xrot = float32(t.Y) / 2
 				// yrot = float32(t.X) / 2
-				log.Printf("[%dms]MouseMotion\tid:%d\tx:%d\ty:%d\txrel:%d\tyrel:%d\n", t.Timestamp, t.Which, t.X, t.Y, t.XRel, t.YRel)
+				// log.Printf("[%dms]MouseMotion\tid:%d\tx:%d\ty:%d\txrel:%d\tyrel:%d\n", t.Timestamp, t.Which, t.X, t.Y, t.XRel, t.YRel)
 			}
 		}
 
