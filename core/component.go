@@ -1,18 +1,22 @@
 package core
 
+import "fmt"
+
 // Component a behavior that is usually attached to an Entity
 type Component struct {
-	parent Entity
+	Parent *Entity
 	Initializer
 	Child
 }
 
-// Parent get the entity this component is attached
-func (rc Component) Parent() Entity {
-	return rc.parent
+// GetParent get the entity this component is attached
+func (rc *Component) GetParent() *Entity {
+	return rc.Parent
 }
 
 // SetParent sets this components parent
-func (rc Component) SetParent(e Entity) {
-	rc.parent = e
+func (rc *Component) SetParent(e *Entity) {
+	fmt.Printf("!!!%v\n", e)
+	rc.Parent = e
+	fmt.Printf("!!!%v\n", rc.Parent)
 }

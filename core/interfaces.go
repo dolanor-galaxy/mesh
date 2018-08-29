@@ -7,26 +7,38 @@ type Initializer interface {
 
 // EntityHolder can hold other entities
 type EntityHolder interface {
-	Add(Entity)
-	Remove(Entity)
+	Add(*Entity)
+	Remove(*Entity)
+	All() *[]Entity
+}
+
+// EntityIterator Something that iterates over a group of entities
+type EntityIterator interface {
+	HasNext() bool
+	Next() *Entity
 }
 
 // ComponentHolder can hold components
 type ComponentHolder interface {
-	Attach(Component)
-	Detach(Component)
+	Attach(Componenter)
+	Detach(Componenter)
 }
 
 // Child a child of an entity
 type Child interface {
-	Parent() Entity
-	SetParent(Entity)
+	Parent() *Entity
+	SetParent(*Entity)
 }
 
 // EntitySystem an larger item that operates on entities
 type EntitySystem interface {
 	Configure(Settings)
 	Initializer
+}
+
+type Componenter interface {
+	GetParent() *Entity
+	SetParent(*Entity)
 }
 
 //////////////////////////////////////////////////

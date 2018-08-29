@@ -35,11 +35,11 @@ func TestRenderDraw(t *testing.T) {
 
 	rs := InitMockRenderSystem(t)
 
-	mockDraw := func(mesh render.Mesh, material render.Material) error {
+	mockDraw := func(mesh *render.Mesh, material *render.Material) error {
 		return nil
 	}
 
-	err := rs.Draw(m, mat, mockDraw)
+	err := rs.Draw(&m, &mat, mockDraw)
 	if err != nil {
 		t.Errorf("Draw call failed")
 	}

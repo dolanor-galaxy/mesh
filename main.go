@@ -4,6 +4,7 @@ import (
 	"log"
 	"runtime"
 
+	"github.com/therohans/mesh/algebra"
 	"github.com/therohans/mesh/core"
 	"github.com/therohans/mesh/model"
 	"github.com/therohans/mesh/render"
@@ -71,20 +72,7 @@ func GameLoop(window *sdl.Window) {
 	renderSystem.Initialize(settings)
 
 	///////////////////////////////////
-	poly, err := model.CreateTestPoly()
-	if err != nil {
-		panic("Can't load test object")
-	}
-	// Send the object the GPU (create buffers)
-	mesh := render.CreateMesh(poly)
-	shader := render.Shader{
-		Name:    "default",
-		Program: render.UseProgram(),
-	}
-	material := render.Material{
-		Shader: shader,
-	}
-	// fmt.Printf("%v\n%v\n", mesh, material)
+	scene, camera := buildTestScene(&settings)
 	///////////////////////////////////
 
 	running = true
@@ -105,7 +93,8 @@ func GameLoop(window *sdl.Window) {
 
 		///////////////////////////////////
 		// Render
-		renderSystem.Render(mesh, material)
+		camera.UpdateViewMatrix()
+		renderSystem.RenderScene(scene)
 		window.GLSwap()
 
 		///////////////////////////////////
@@ -120,4 +109,55 @@ func GameLoop(window *sdl.Window) {
 		///////////////////////////////////
 		// time.Sleep(50 * time.Millisecond)
 	}
+}
+
+func buildTestScene(s *core.Settings) (*core.Scene, *core.ComponentCamera) {
+	///////////////////////////////////
+	scene := core.Scene{}
+
+	poly, err := model.CreateTestPoly()
+	if err != nil {
+		panic("Can't load test object")
+	}
+	// Send the object the GPU (create buffers)
+	mesh := render.CreateMesh(poly)
+	shader := render.Shader{
+		Name:    "default",
+		Program: render.UseProgram(),
+	}
+	material := render.Material{
+		Shader: shader,
+	}
+
+	entity := core.Entity{
+		Transform: core.NewTransform(),
+	}
+	entity.Transform.Position.Z = -5
+	entity.Name = "Test Model"
+	render := render.NewComponentRender()
+	render.Mesh = mesh
+	render.Material = material
+	entity.Attach(&render)
+
+	camera := core.Entity{
+		Transform: core.NewTransform(),
+	}
+	camera.Transform.Position.Y = 2
+	camera.Transform.Position.Z = 5
+	camera.Name = "Test Camera"
+	cameraComp := core.NewComponentCamera()
+	cameraComp.UpdatePerspective(s.Width, s.Height, algebra.PerspectiveOptions{
+		Fov:        70,
+		Near:       0.1,
+		Far:        1000,
+		PixelRatio: 1,
+	})
+	camera.Attach(&cameraComp)
+
+	scene.Add(&camera)
+	scene.Add(&entity)
+	scene.ActiveCamera = &camera
+	///////////////////////////////////
+
+	return &scene, &cameraComp
 }

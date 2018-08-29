@@ -20,7 +20,12 @@ type Program struct {
 	TexCoordLoc gl.Uint
 	NormalLoc   gl.Uint
 	TangentLoc  gl.Uint
-	UniScale    gl.Int
+	// UniWorld the uniform world matrix
+	UniWorld gl.Int
+	// UniView the uniform view matrix
+	UniView gl.Int
+	// UniProject the uniform projection matrix
+	UniProject gl.Int
 }
 
 // ReadVertexShader read a vertex shader from disk
@@ -113,8 +118,8 @@ func compileStatus(shader gl.Uint) (gl.Uint, error) {
 // UseProgram uses a program
 func UseProgram() Program {
 	program, err := CreateProgram(
-		ReadVertexShader("Demo.glsl"),
-		ReadFragmentShader("Demo.glsl"))
+		ReadVertexShader("Simple.glsl"),
+		ReadFragmentShader("Simple.glsl"))
 	if err != nil {
 		panic(err)
 	}
@@ -122,10 +127,17 @@ func UseProgram() Program {
 	gl.UseProgram(program)
 
 	// Uniforms
-	unistring := gl.GLString("scaleMove")
-	uniScale := gl.GetUniformLocation(program, unistring)
+	uniWorld := gl.GetUniformLocation(program, gl.GLString("uWorld"))
 	if gl.GetError() != gl.NO_ERROR {
-		log.Printf("GetUniformLocation not found.")
+		log.Printf("uWorld not found.")
+	}
+	uniView := gl.GetUniformLocation(program, gl.GLString("uView"))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("uView not found.")
+	}
+	uniProj := gl.GetUniformLocation(program, gl.GLString("uProj"))
+	if gl.GetError() != gl.NO_ERROR {
+		log.Printf("uProj not found.")
 	}
 
 	// Attributes
@@ -176,6 +188,8 @@ func UseProgram() Program {
 		TexCoordLoc: gl.Uint(texCoordLoc),
 		NormalLoc:   gl.Uint(normalLoc),
 		TangentLoc:  gl.Uint(tangentLoc),
-		UniScale:    uniScale,
+		UniWorld:    uniWorld,
+		UniView:     uniView,
+		UniProject:  uniProj,
 	}
 }

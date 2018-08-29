@@ -11,8 +11,9 @@ type Matrix [4][4]float64
 type PerspectiveOptions struct {
 	Fov         float64
 	AspectRatio float64
-	ZNear       float64
-	ZFar        float64
+	PixelRatio  float64
+	Near        float64
+	Far         float64
 }
 
 // InitIdentity create an identity matrix
@@ -53,7 +54,7 @@ func (m *Matrix) InitIdentity() {
 //  1 | 0 1 0 0
 //  2 | 0 0 1 0
 //  3 | x y z 1
-func (m *Matrix) InitTranslation(p Vector) {
+func (m *Matrix) InitTranslation(p *Vector) {
 	// row \  / col
 	m[0][0] = 1
 	m[0][1] = 0
@@ -77,7 +78,7 @@ func (m *Matrix) InitTranslation(p Vector) {
 }
 
 // InitRotation Row-Major Ordering
-func (m *Matrix) InitRotation(p Vector) {
+func (m *Matrix) InitRotation(p *Vector) {
 	rx := Matrix{}
 	ry := Matrix{}
 	rz := Matrix{}
@@ -159,7 +160,7 @@ func (m *Matrix) InitRotation(p Vector) {
 //  1 | 0 y 0 0
 //  2 | 0 0 z 0
 //  3 | 0 0 0 1
-func (m *Matrix) InitScale(p Vector) {
+func (m *Matrix) InitScale(p *Vector) {
 	m[0][0] = p.X
 	m[0][1] = 0
 	m[0][2] = 0
@@ -184,7 +185,7 @@ func (m *Matrix) InitScale(p Vector) {
 // InitPerspective init the matrix to a perspective projection matrix
 func (m *Matrix) InitPerspective(o PerspectiveOptions) {
 	tanHalfFOV := math.Tan(math.Pi*0.5 - 0.5*o.Fov)
-	zRange := 1 / (o.ZNear - o.ZFar)
+	zRange := 1 / (o.Near - o.Far)
 
 	// row 0
 	m[0][0] = 1 / (tanHalfFOV * o.AspectRatio)
@@ -201,14 +202,34 @@ func (m *Matrix) InitPerspective(o PerspectiveOptions) {
 	// row 2
 	m[2][0] = 0
 	m[2][1] = 0
-	m[2][2] = (o.ZFar + o.ZNear) * zRange
+	m[2][2] = (o.Far + o.Near) * zRange
 	m[2][3] = -1
 
 	// row 3
 	m[3][0] = 0
 	m[3][1] = 0
-	m[3][2] = o.ZNear * o.ZFar * zRange * 2
+	m[3][2] = o.Near * o.Far * zRange * 2
 	m[3][3] = 0
+}
+
+// InitFUR initialize with forward, up, and right vectors
+func (m *Matrix) InitFUR(f *Vector, u *Vector, r *Vector) {
+	m[0][0] = r.X
+	m[0][1] = r.Y
+	m[0][2] = r.Z
+	m[0][3] = 0
+	m[1][0] = u.X
+	m[1][1] = u.Y
+	m[1][2] = u.Z
+	m[1][3] = 0
+	m[2][0] = f.X
+	m[2][1] = f.Y
+	m[2][2] = f.Z
+	m[2][3] = 0
+	m[3][0] = 0
+	m[3][1] = 0
+	m[3][2] = 0
+	m[3][3] = 1
 }
 
 // Mul multiply two matries returning a new Matrix
@@ -423,11 +444,11 @@ func (m *Matrix) Clone(out *Matrix) {
 // AsArray returns the matrix as a flat float32 array
 // it's 32 bit because opengl will need that. This may not
 // be the right place for this
-func (m *Matrix) AsArray() [16]float32 {
-	return [16]float32{
-		float32(m[0][0]), float32(m[0][1]), float32(m[0][2]), float32(m[0][3]),
-		float32(m[1][0]), float32(m[1][1]), float32(m[1][2]), float32(m[1][3]),
-		float32(m[2][0]), float32(m[2][1]), float32(m[2][2]), float32(m[2][3]),
-		float32(m[3][0]), float32(m[3][1]), float32(m[3][2]), float32(m[3][3]),
-	}
-}
+// func (m *Matrix) AsArray() [16]float32 {
+// 	return [16]float32{
+// 		float32(m[0][0]), float32(m[0][1]), float32(m[0][2]), float32(m[0][3]),
+// 		float32(m[1][0]), float32(m[1][1]), float32(m[1][2]), float32(m[1][3]),
+// 		float32(m[2][0]), float32(m[2][1]), float32(m[2][2]), float32(m[2][3]),
+// 		float32(m[3][0]), float32(m[3][1]), float32(m[3][2]), float32(m[3][3]),
+// 	}
+// }

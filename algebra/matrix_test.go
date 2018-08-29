@@ -18,7 +18,7 @@ func TestInitTranslation(t *testing.T) {
 	m := algebra.Matrix{}
 	p := algebra.Vector{X: 2.0, Y: 3.0, Z: 4.0, W: .0}
 
-	m.InitTranslation(p)
+	m.InitTranslation(&p)
 
 	if m[3][0] != 2.0 && m[3][1] != 3.0 && m[3][2] != 4.0 {
 		t.Errorf("InitTranslate did something odd")
@@ -36,7 +36,7 @@ func TestInitRotation(t *testing.T) {
 	m := algebra.Matrix{}
 	p := algebra.Vector{X: 2.0, Y: 3.0, Z: 4.0, W: .0}
 
-	m.InitRotation(p)
+	m.InitRotation(&p)
 
 	if m != expected {
 		t.Errorf("InitRotate did something odd: %v", m)
@@ -54,7 +54,7 @@ func TestInitScale(t *testing.T) {
 	m := algebra.Matrix{}
 	p := algebra.Vector{X: 2.0, Y: 3.0, Z: 4.0, W: .0}
 
-	m.InitScale(p)
+	m.InitScale(&p)
 
 	if m != expected {
 		t.Errorf("InitScale did something odd: %v", m)
@@ -65,8 +65,8 @@ func TestMatrixInitPerspective(t *testing.T) {
 	opts := algebra.PerspectiveOptions{
 		Fov:         algebra.DegToRad(45),
 		AspectRatio: (1024 / 768),
-		ZNear:       .1,
-		ZFar:        1000,
+		Near:        .1,
+		Far:         1000,
 	}
 
 	expected := algebra.Matrix{
@@ -81,6 +81,26 @@ func TestMatrixInitPerspective(t *testing.T) {
 
 	if m != expected {
 		t.Errorf("Perspective did something odd: %v", m)
+	}
+}
+
+func TestMatrixInitFUR(t *testing.T) {
+	f := algebra.Vector{X: 0.1, Y: 0.2, Z: 1, W: 0}
+	u := algebra.Vector{X: 0.1, Y: 1, Z: 0.2, W: 0}
+	r := algebra.Vector{X: 1, Y: 0.1, Z: 0.2, W: 0}
+
+	expected := algebra.Matrix{
+		{1, 0.1, 0.2, 0},
+		{0.1, 1, 0.2, 0},
+		{0.1, 0.2, 1, 0},
+		{0, 0, 0, 1},
+	}
+
+	m := algebra.Matrix{}
+	m.InitFUR(&f, &u, &r)
+
+	if m != expected {
+		t.Errorf("InitFUR did something odd: %v %v", m, expected)
 	}
 }
 
@@ -124,7 +144,7 @@ func TestTranspose(t *testing.T) {
 	m := algebra.Matrix{}
 	p := algebra.Vector{X: 2.0, Y: 3.0, Z: 4.0, W: .0}
 
-	m.InitTranslation(p)
+	m.InitTranslation(&p)
 	actual := algebra.Matrix{}
 	m.Transpose(&actual)
 
@@ -176,26 +196,26 @@ func TestMatrixInverse(t *testing.T) {
 	}
 }
 
-func TestMatrixAsArray(t *testing.T) {
-	m1 := algebra.Matrix{
-		{10, 20, 30, 40},
-		{10, 20, 30, 40},
-		{10, 20, 30, 40},
-		{10, 20, 30, 40},
-	}
-	expected := [16]float32{
-		10, 20, 30, 40,
-		10, 20, 30, 40,
-		10, 20, 30, 40,
-		10, 20, 30, 40,
-	}
+// func TestMatrixAsArray(t *testing.T) {
+// 	m1 := algebra.Matrix{
+// 		{10, 20, 30, 40},
+// 		{10, 20, 30, 40},
+// 		{10, 20, 30, 40},
+// 		{10, 20, 30, 40},
+// 	}
+// 	expected := [16]float32{
+// 		10, 20, 30, 40,
+// 		10, 20, 30, 40,
+// 		10, 20, 30, 40,
+// 		10, 20, 30, 40,
+// 	}
 
-	actual := m1.AsArray()
+// 	actual := m1.AsArray()
 
-	if actual != expected {
-		t.Errorf("AsArray %v to equal %v", expected, actual)
-	}
-}
+// 	if actual != expected {
+// 		t.Errorf("AsArray %v to equal %v", expected, actual)
+// 	}
+// }
 
 func TestMatrixClone(t *testing.T) {
 	m1 := algebra.Matrix{
