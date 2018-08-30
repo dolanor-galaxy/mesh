@@ -132,7 +132,7 @@ func buildTestScene(s *core.Settings) (*core.Scene, *core.ComponentCamera) {
 	entity := core.Entity{
 		Transform: core.NewTransform(),
 	}
-	entity.Transform.Position.Z = -5
+	entity.Transform.Position.Z = -8
 	entity.Name = "Test Model"
 	render := render.NewComponentRender()
 	render.Mesh = mesh
@@ -143,11 +143,10 @@ func buildTestScene(s *core.Settings) (*core.Scene, *core.ComponentCamera) {
 		Transform: core.NewTransform(),
 	}
 	camera.Transform.Position.Y = 2
-	camera.Transform.Position.Z = 5
 	camera.Name = "Test Camera"
 	cameraComp := core.NewComponentCamera()
 	cameraComp.UpdatePerspective(s.Width, s.Height, algebra.PerspectiveOptions{
-		Fov:        70,
+		Fov:        120,
 		Near:       0.1,
 		Far:        1000,
 		PixelRatio: 1,

@@ -18,8 +18,7 @@ uniform mat4 uProj;       // projection
 void main() {
   // v_normal = mat3(uWorld) * normalize(Normal.xzy);
   // // v_normal = vec3( mWorld * vec4(normal.x, normal.z, normal.y, 0.0) );
-  // // v_texcoord = texCoord;
-  
+    
   v_color = Color;
   v_texcoord = TexCoord;
   v_normal = Normal;

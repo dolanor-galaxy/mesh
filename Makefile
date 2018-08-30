@@ -16,6 +16,10 @@ build: clean
 	go build -o dist/mesh
 	cp -R assets dist/assets
 
+wasm: clean
+	mkdir dist
+	GOOS=js GOARCH=wasm go1.11 build -o dist/test.wasm main.go
+
 deps:
 	# SDL 2
 	brew install sdl2{,_image,_mixer,_ttf,_gfx} pkg-config
