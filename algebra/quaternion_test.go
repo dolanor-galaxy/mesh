@@ -6,7 +6,7 @@ import (
 	"github.com/therohans/mesh/algebra"
 )
 
-func TestFromVector(t *testing.T) {
+func TestSetFromVector(t *testing.T) {
 	expected := algebra.Quaternion{
 		X: 0.7071067811865475,
 		Y: 1.414213562373095,
@@ -18,7 +18,7 @@ func TestFromVector(t *testing.T) {
 		X: 1, Y: 2, Z: 5,
 	}
 
-	q.FromVector(&v, algebra.DegToRad(90))
+	q.SetFromVector(&v, algebra.DegToRad(90))
 
 	if q != expected {
 		t.Errorf("FromVector did something odd %v", q)

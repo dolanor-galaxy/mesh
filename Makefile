@@ -4,9 +4,7 @@ clean:
 	rm -rf dist
 
 test:
-	cd algebra; go test
-	cd geometry; go test
-	cd render; go test
+	go test ./...
 
 start:
 	go run main.go

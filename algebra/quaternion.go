@@ -7,9 +7,8 @@ import "math"
 // 3D space.
 type Quaternion Vector
 
-// FromVector sets the quats values given an axis and an angle
-// (the angles are Rads *not* degrees)
-func (q *Quaternion) FromVector(v *Vector, angle float64) *Quaternion {
+// SetFromVector sets the quats values given an axis and an angle (the angles are Rads *not* degrees)
+func (q *Quaternion) SetFromVector(v *Vector, angle float64) {
 	sinHalfAngle := math.Sin(angle * .5)
 	cosHalfAngle := math.Cos(angle * .5)
 
@@ -17,8 +16,6 @@ func (q *Quaternion) FromVector(v *Vector, angle float64) *Quaternion {
 	q.Y = v.Y * sinHalfAngle
 	q.Z = v.Z * sinHalfAngle
 	q.W = cosHalfAngle
-
-	return q
 }
 
 // Length return the length of the quat
