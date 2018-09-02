@@ -18,6 +18,8 @@ build: clean
 
 wasm: clean
 	mkdir dist
+	# go get golang.org/dl/go1.11
+	# go1.11 download
 	GOOS=js GOARCH=wasm go1.11 build -o dist/test.wasm main.go
 
 deps:
@@ -40,8 +42,8 @@ deps:
 install:
 	go install
 
-docs:
+docs: clean
 	mkdir doco
-	godoc -html ./algebra > ./doco/algebra.html
-	godoc -html ./geometry > ./doco/geometry.html
-	godoc -html ./render > ./doco/render.html
+	godoc -analysis type,pointer -html ./algebra > ./doco/algebra.html
+	godoc -analysis type,pointer -html ./geometry > ./doco/geometry.html
+	godoc -analysis type,pointer -html ./render > ./doco/render.html
