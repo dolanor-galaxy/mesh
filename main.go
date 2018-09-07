@@ -85,9 +85,10 @@ func GameLoop(window *sdl.Window) {
 			case *sdl.QuitEvent:
 				running = false
 				// case *sdl.MouseMotionEvent:
-				// xrot = float32(t.Y) / 2
-				// yrot = float32(t.X) / 2
-				// log.Printf("[%dms]MouseMotion\tid:%d\tx:%d\ty:%d\txrel:%d\tyrel:%d\n", t.Timestamp, t.Which, t.X, t.Y, t.XRel, t.YRel)
+				// 	xrot := float32(t.X) / 2
+				// 	yrot := float32(t.Y) / 2
+				// 	camera.Parent.Transform.Position.X = float64(xrot)
+				// 	camera.Parent.Transform.Position.Y = float64(yrot)
 			}
 		}
 

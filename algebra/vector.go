@@ -169,3 +169,11 @@ func (v *Vector) Set(x, y, z, w float64) {
 	v.Z = z
 	v.W = w
 }
+
+// Copy sets the properties of this vector to the given vector
+func (v *Vector) Copy(vec Vector) {
+	v.X = vec.X
+	v.Y = vec.Y
+	v.Z = vec.Z
+	v.W = vec.W
+}
