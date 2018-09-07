@@ -31,7 +31,7 @@ type Shape struct {
 	// Must be set to an int > 0 by subclasses.
 	Type uint
 	// The local bounding sphere radius of this shape.
-	BoundingSphereRadius float32
+	BoundingSphereRadius float64
 }
 
 // UpdateBoundingSphereRadius UpdateBoundingSphereRadius Computes the bounding sphere radius.
