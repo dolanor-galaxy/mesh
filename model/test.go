@@ -35,15 +35,32 @@ func CreateTestPoly() (geometry.Polyhedron, error) {
 				Z: modelData[row+5],
 				W: 1,
 			},
+			TexCoord: algebra.Vector{
+				X: modelData[row+6],
+				Y: modelData[row+7],
+				Z: 0,
+				W: 0,
+			},
+			Normal: algebra.Vector{
+				X: modelData[row+8],
+				Y: modelData[row+9],
+				Z: modelData[row+10],
+				W: 0,
+			},
+			Tangent: algebra.Vector{
+				X: modelData[row+11],
+				Y: modelData[row+12],
+				Z: modelData[row+13],
+				W: 0,
+			},
 		}
 		poly.Indices[i] = uint16(i)
-		// fmt.Printf("%v", poly.Vertices[i])
 	}
-	// fmt.Printf("%v", poly.Indices)
 	return poly, nil
 }
 
 var phoCube = []float64{
+	//0     1     2     3      4      5    6  7  8  9  A  B  C  D
 	-1.0, -1.0, -1.0, 0.583, 0.771, 0.014, 0, 0, 0, 0, 0, 0, 0, 0,
 	-1.0, -1.0, 1.0, 0.609, 0.115, 0.436, 0, 0, 0, 0, 0, 0, 0, 0,
 	-1.0, 1.0, 1.0, 0.327, 0.483, 0.844, 0, 0, 0, 0, 0, 0, 0, 0,

@@ -37,6 +37,8 @@ var (
 	Up = AxisY
 	// Right a vector representing right direction
 	Right = AxisX
+	// Precision used with 'Almost Equals' when compairng vectors
+	Precision = 1e-6
 )
 
 // Length return the length of the vector
@@ -78,6 +80,12 @@ func (v *Vector) Cross(o Vector, out *Vector) {
 // Normalized vector in the same direction but with norm (length) 1
 func (v *Vector) Normalized(out *Vector) {
 	len := v.Length()
+	if len == 0 {
+		out.X = 0
+		out.Y = 0
+		out.Z = 0
+		return
+	}
 	out.X = v.X / len
 	out.Y = v.Y / len
 	out.Z = v.Z / len
@@ -176,4 +184,22 @@ func (v *Vector) Copy(vec Vector) {
 	v.Y = vec.Y
 	v.Z = vec.Z
 	v.W = vec.W
+}
+
+// AlmostEquals Check if a vector is almost equal to another one.
+func (v *Vector) AlmostEquals(nv *Vector) bool {
+	if math.Abs(v.X-nv.X) > Precision ||
+		math.Abs(v.Y-nv.Y) > Precision ||
+		math.Abs(v.Z-nv.Z) > Precision {
+		return false
+	}
+	return true
+}
+
+// Clone return a new instance of this vector
+func (v *Vector) Clone(out *Vector) {
+	out.X = v.X
+	out.Y = v.Y
+	out.Z = v.Z
+	out.W = v.W
 }

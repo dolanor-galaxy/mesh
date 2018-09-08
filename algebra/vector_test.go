@@ -111,6 +111,18 @@ func TestNormalzed(t *testing.T) {
 	}
 }
 
+func TestNormalzedZero(t *testing.T) {
+	a := algebra.Vector{X: 0, Y: 0, Z: 0}
+
+	expected := algebra.Vector{X: 0, Y: 0, Z: 0}
+	actual := algebra.Vector{}
+	a.Normalized(&actual)
+
+	if actual != expected {
+		t.Errorf("Normalized: %v should be %v", actual, expected)
+	}
+}
+
 func TestNorm(t *testing.T) {
 	a := algebra.Vector{X: 2.9, Y: 55.8, Z: .898}
 
@@ -119,6 +131,18 @@ func TestNorm(t *testing.T) {
 
 	if actual != expected {
 		t.Errorf("Norm: %v should be %v", actual, expected)
+	}
+}
+
+func TestAlmostEquals(t *testing.T) {
+	a := algebra.Vector{X: 2.9, Y: 55.8, Z: .898}
+	b := algebra.Vector{X: 2.900000001, Y: 55.8000000001, Z: .8980000001}
+
+	expected := true
+	actual := a.AlmostEquals(&b)
+
+	if actual != expected {
+		t.Errorf("Almost Equals: %v", actual)
 	}
 }
 
@@ -317,5 +341,19 @@ func TestVecMagnitude(t *testing.T) {
 
 	if actual != expected {
 		t.Errorf("Magnitude %v should be %v", actual, expected)
+	}
+}
+
+func TestClone(t *testing.T) {
+	input := algebra.Vector{X: -2.9, Y: 55.8, Z: -.898}
+	actual := algebra.Vector{}
+
+	input.Clone(&actual)
+
+	if &input == &actual {
+		t.Errorf("Clone used the same memory address")
+	}
+	if input.X != actual.X || input.Y != actual.Y || input.Z != actual.Z {
+		t.Errorf("Clone values differ %v %v", input, actual)
 	}
 }
