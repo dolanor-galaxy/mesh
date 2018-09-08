@@ -178,12 +178,17 @@ func (v *Vector) Set(x, y, z, w float64) {
 	v.W = w
 }
 
-// Copy sets the properties of this vector to the given vector
-func (v *Vector) Copy(vec Vector) {
-	v.X = vec.X
-	v.Y = vec.Y
-	v.Z = vec.Z
-	v.W = vec.W
+// IsZero returns true if xy and z are zero
+func (v *Vector) IsZero() bool {
+	return v.X == 0 && v.Y == 0 && v.Z == 0
+}
+
+// Negate Make the vector point in the opposite direction.
+func (v *Vector) Negate(target *Vector) {
+	target.X = -v.X
+	target.Y = -v.Y
+	target.Z = -v.Z
+	target.W = -v.W
 }
 
 // AlmostEquals Check if a vector is almost equal to another one.
@@ -194,6 +199,14 @@ func (v *Vector) AlmostEquals(nv *Vector) bool {
 		return false
 	}
 	return true
+}
+
+// Copy sets the properties of this vector to the given vector
+func (v *Vector) Copy(vec Vector) {
+	v.X = vec.X
+	v.Y = vec.Y
+	v.Z = vec.Z
+	v.W = vec.W
 }
 
 // Clone return a new instance of this vector

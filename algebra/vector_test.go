@@ -344,6 +344,20 @@ func TestVecMagnitude(t *testing.T) {
 	}
 }
 
+func TestCopy(t *testing.T) {
+	a := algebra.Vector{X: -2.9, Y: 55.8, Z: -.898}
+	b := algebra.Vector{X: 21, Y: 43, Z: 134}
+
+	b.Copy(a)
+
+	if &b == &a {
+		t.Errorf("Copy used the same memory address")
+	}
+	if a.X != b.X || a.Y != b.Y || a.Z != b.Z {
+		t.Errorf("Copy values differ %v %v", a, b)
+	}
+}
+
 func TestClone(t *testing.T) {
 	input := algebra.Vector{X: -2.9, Y: 55.8, Z: -.898}
 	actual := algebra.Vector{}
@@ -355,5 +369,39 @@ func TestClone(t *testing.T) {
 	}
 	if input.X != actual.X || input.Y != actual.Y || input.Z != actual.Z {
 		t.Errorf("Clone values differ %v %v", input, actual)
+	}
+}
+
+func TestIsZero(t *testing.T) {
+	input := algebra.Vector{X: 0, Y: 0, Z: 0}
+	expected := true
+
+	actual := input.IsZero()
+
+	if actual != expected {
+		t.Errorf("Is Zero is wrong")
+	}
+}
+
+func TestIsZero2(t *testing.T) {
+	input := algebra.Vector{X: 0, Y: 0.1, Z: 0}
+	expected := false
+
+	actual := input.IsZero()
+
+	if actual != expected {
+		t.Errorf("Is Zero is wrong")
+	}
+}
+
+func TestNegate(t *testing.T) {
+	input := algebra.Vector{X: 21, Y: 3.1, Z: 38, W: 123}
+	expected := algebra.Vector{X: -21, Y: -3.1, Z: -38, W: -123}
+	actual := algebra.Vector{}
+
+	input.Negate(&actual)
+
+	if actual != expected {
+		t.Errorf("Negate is wrong")
 	}
 }
