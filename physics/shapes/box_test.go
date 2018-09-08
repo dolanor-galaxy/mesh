@@ -19,7 +19,7 @@ func TestBoxCalculateLocalInertia(t *testing.T) {
 		Y: .5,
 		Z: .5,
 	}
-	box := physics.NewBox(half)
+	box, _ := physics.NewBox(half)
 
 	box.CalculateLocalInertia(10, &actual)
 
@@ -34,7 +34,7 @@ func TestBoxGetSideNormals(t *testing.T) {
 		Y: .5,
 		Z: .5,
 	}
-	box := physics.NewBox(half)
+	box, _ := physics.NewBox(half)
 	quat := algebra.Quaternion{}
 	quat.SetFromVector(&algebra.AxisZ, algebra.DegToRad(90))
 
@@ -57,7 +57,7 @@ func TestBoxGetSideNormals(t *testing.T) {
 
 func TestBoxVolume(t *testing.T) {
 	half := algebra.Vector{X: 2.5, Y: 2.5, Z: 2.5}
-	box := physics.NewBox(half)
+	box, _ := physics.NewBox(half)
 
 	expected := 125.0
 	actual := box.Volume()
@@ -69,7 +69,7 @@ func TestBoxVolume(t *testing.T) {
 
 func TestBoxUpdateBoundingSphereRadius(t *testing.T) {
 	half := algebra.Vector{X: 1.5, Y: 1.5, Z: 1.5}
-	box := physics.NewBox(half)
+	box, _ := physics.NewBox(half)
 
 	expected := 2.598076211353316
 	box.UpdateBoundingSphereRadius()
@@ -91,7 +91,7 @@ func TestBoxCalculateWorldAABB(t *testing.T) {
 	}
 
 	half := algebra.Vector{X: 2.5, Y: 2.5, Z: 2.5}
-	box := physics.NewBox(half)
+	box, _ := physics.NewBox(half)
 
 	// Pretend world position
 	worldPos := algebra.Vector{X: 0, Y: 10, Z: -5}

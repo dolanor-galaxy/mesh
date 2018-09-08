@@ -7,17 +7,20 @@ import (
 // Box A 3d box shape.
 type Box struct {
 	Shape
-	HalfExtents      algebra.Vector
-	convexPolyhedron *ConvexPolyhedron
+	HalfExtents algebra.Vector
+	// Used by the contact generator to make contacts with other convex polyhedra for example
+	ConvexPolyhedron *ConvexPolyhedron
 }
 
-func NewBox(halfExtents algebra.Vector) Box {
+// NewBox creates a new bounding box given the half extents
+func NewBox(halfExtents algebra.Vector) (*Box, error) {
 	box := Box{}
 	box.Type = ShapeBox
 	box.HalfExtents = halfExtents
-	return box
+	return &box, nil
 }
 
+// CalculateLocalInertia calulates local inertia
 func (b *Box) CalculateLocalInertia(mass float64, target *algebra.Vector) {
 	b.calculateInertia(b.HalfExtents, mass, target)
 }
@@ -29,7 +32,9 @@ func (b *Box) calculateInertia(halfExtents algebra.Vector, mass float64, target 
 	target.Z = 1.0 / 12.0 * mass * (2*e.Y*2*e.Y + 2*e.X*2*e.X)
 }
 
-// GetSideNormals Get the box 6 side normals
+// GetSideNormals Get the box 6 side normals. Orientation to apply to the
+// normal vectors. If not provided, the vectors will be in respect to the
+// local frame.
 func (b *Box) GetSideNormals(sixTargetVectors *[6]algebra.Vector, quat algebra.Quaternion) {
 	sides := sixTargetVectors
 	ex := b.HalfExtents
@@ -49,7 +54,7 @@ func (b *Box) GetSideNormals(sixTargetVectors *[6]algebra.Vector, quat algebra.Q
 	}
 }
 
-// UpdateConvexPolyhedron
+// UpdateConvexPolyhedron Updates the local convex polyhedron representation used for some collisions.
 func (b *Box) UpdateConvexPolyhedron() {
 	sx := b.HalfExtents.Z
 	sy := b.HalfExtents.Y
@@ -84,8 +89,8 @@ func (b *Box) UpdateConvexPolyhedron() {
 
 	normals := []algebra.Vector{}
 
-	h := NewConvexPolyhedron(vertices, indices, axes, normals)
-	b.convexPolyhedron = h
+	h, _ := NewConvexPolyhedron(vertices, indices, axes, normals)
+	b.ConvexPolyhedron = h
 	// h.material = b.material
 }
 
