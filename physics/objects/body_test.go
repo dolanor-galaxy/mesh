@@ -1,4 +1,4 @@
-package physics_test
+package objects_test
 
 import (
 	"testing"

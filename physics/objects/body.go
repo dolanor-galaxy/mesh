@@ -1,4 +1,4 @@
-package physics
+package objects
 
 import (
 	"github.com/therohans/mesh/algebra"
@@ -19,6 +19,7 @@ const (
 	Sleeping = 2
 )
 
+// BodyOptions options
 type BodyOptions struct {
 	Position        algebra.Vector
 	Velocity        algebra.Vector
@@ -40,14 +41,29 @@ type BodyOptions struct {
 	// Shape                physics.Shape
 }
 
+// Body physics rigid body
 type Body struct {
 	// Options all the properties of this body
 	Options BodyOptions
 	// SleepState Current sleep state.
-	SleepState int
+	SleepState             int
+	wakeUpAfterNarrowphase bool
 }
 
 // WakeUp Wake the body up.
 func (b *Body) WakeUp() {
+	s := b.SleepState
+	b.SleepState = Awake
+	b.wakeUpAfterNarrowphase = false
+	if s == Sleeping {
+		// this.dispatchEvent(Body.wakeupEvent)
+	}
+}
 
+// Sleep Force body sleep
+func (b *Body) Sleep() {
+	b.SleepState = Sleeping
+	b.Options.Velocity.Set(0, 0, 0, 0)
+	b.Options.AngularVelocity.Set(0, 0, 0, 0)
+	b.wakeUpAfterNarrowphase = false
 }
