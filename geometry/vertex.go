@@ -1,6 +1,6 @@
 package geometry
 
-import "github.com/therohans/mesh/algebra"
+import "github.com/robrohan/mesh/algebra"
 
 const (
 	// VertexSize number of elements in a vertex

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/therohans/mesh/render"
+	"github.com/robrohan/mesh/render"
 )
 
 func testChdir(t *testing.T, dir string) func() {

@@ -3,10 +3,10 @@ package main
 import (
 	"runtime"
 
-	"github.com/therohans/mesh/algebra"
-	"github.com/therohans/mesh/core"
-	"github.com/therohans/mesh/model"
-	"github.com/therohans/mesh/render"
+	"github.com/robrohan/mesh/algebra"
+	"github.com/robrohan/mesh/core"
+	"github.com/robrohan/mesh/model"
+	"github.com/robrohan/mesh/render"
 	"github.com/veandco/go-sdl2/sdl"
 )
 

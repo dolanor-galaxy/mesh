@@ -1,6 +1,6 @@
 package render
 
-import "github.com/therohans/mesh/algebra"
+import "github.com/robrohan/mesh/algebra"
 
 const (
 	// IllumColorOnAmbientOff Color on and Ambient off

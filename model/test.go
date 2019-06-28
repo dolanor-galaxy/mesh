@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/therohans/mesh/algebra"
-	"github.com/therohans/mesh/geometry"
+	"github.com/robrohan/mesh/algebra"
+	"github.com/robrohan/mesh/geometry"
 )
 
 // CreateTestPoly make a default cube for render testing

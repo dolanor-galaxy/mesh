@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/therohans/mesh/algebra"
-	"github.com/therohans/mesh/core"
+	"github.com/robrohan/mesh/algebra"
+	"github.com/robrohan/mesh/core"
 
 	gl "github.com/chsc/gogl/gl21"
 )

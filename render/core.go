@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	gl "github.com/chsc/gogl/gl21"
-	"github.com/therohans/mesh/geometry"
+	"github.com/robrohan/mesh/geometry"
 )
 
 // Program wrapper object for an OpenGL Program with Attribute Locations

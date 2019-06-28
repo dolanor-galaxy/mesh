@@ -3,7 +3,7 @@ package core
 import (
 	"math"
 
-	"github.com/therohans/mesh/algebra"
+	"github.com/robrohan/mesh/algebra"
 )
 
 // NewComponentCamera create a new default camera

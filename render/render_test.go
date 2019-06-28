@@ -3,8 +3,8 @@ package render_test
 import (
 	"testing"
 
-	"github.com/therohans/mesh/core"
-	"github.com/therohans/mesh/render"
+	"github.com/robrohan/mesh/core"
+	"github.com/robrohan/mesh/render"
 )
 
 func InitMockRenderSystem(t *testing.T) render.System {
