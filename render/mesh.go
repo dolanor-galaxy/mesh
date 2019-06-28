@@ -76,7 +76,7 @@ func CreateMesh(p geometry.Polyhedron) Mesh {
 
 // VertexBuffer creates a buffer for sending to opengl
 func VertexBuffer(p geometry.Polyhedron) []float32 {
-	vertices := p.GetVerticies()
+	vertices := p.GetVertices()
 	vlen := len(vertices)
 	buffer := make([]float32, vlen*int(geometry.VertexSize), vlen*int(geometry.VertexSize))
 

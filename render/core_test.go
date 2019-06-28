@@ -25,7 +25,7 @@ func testChdir(t *testing.T, dir string) func() {
 func TestReadVertexShader(t *testing.T) {
 	defer testChdir(t, "../")()
 
-	txt := render.ReadVertexShader("Demo.glsl")
+	txt := render.ReadVertexShader("Simple.glsl")
 
 	if txt == "" {
 		t.Errorf("Could not read file %v", txt)
@@ -35,7 +35,7 @@ func TestReadVertexShader(t *testing.T) {
 func TestReadFragmentShader(t *testing.T) {
 	defer testChdir(t, "../")()
 
-	txt := render.ReadFragmentShader("Demo.glsl")
+	txt := render.ReadFragmentShader("Simple.glsl")
 
 	if txt == "" {
 		t.Errorf("Could not read file %v", txt)
@@ -45,13 +45,13 @@ func TestReadFragmentShader(t *testing.T) {
 // func TestCreateProgram(t *testing.T) {
 // 	defer testChdir(t, "../")()
 
-// 	frag := render.ReadFragmentShader("Demo.glsl")
-// 	vert := render.ReadVertexShader("Demo.glsl")
+// 	frag := render.ReadFragmentShader("Simple.glsl")
+// 	vert := render.ReadVertexShader("Simple.glsl")
 
-// 	prog, err := render.CreateProgram(vert, frag)
+// 	_, err := render.CreateProgram(vert, frag)
 // 	if err != nil {
 // 		t.Errorf("Error creating %v", err)
 // 	}
 
-// 	fmt.Printf("%v", prog)
+// 	// fmt.Printf("%v", prog)
 // }

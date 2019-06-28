@@ -37,7 +37,7 @@ var (
 	Up = AxisY
 	// Right a vector representing right direction
 	Right = AxisX
-	// Precision used with 'Almost Equals' when compairng vectors
+	// Precision used with 'Almost Equals' when comparing vectors
 	Precision = 1e-6
 )
 

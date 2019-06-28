@@ -35,7 +35,7 @@ func (c *ComponentCamera) GetProjection() *algebra.Matrix {
 	return c.Projection
 }
 
-// UpdateViewMatrix update the view model based on the parents tranform
+// UpdateViewMatrix update the view model based on the parents transform
 func (c *ComponentCamera) UpdateViewMatrix() {
 	transform := c.GetParent().Transform
 

@@ -6,8 +6,8 @@ type Polyhedron struct {
 	Indices  []uint16
 }
 
-// GetVerticies get the array of verts for this mesh
-func (p *Polyhedron) GetVerticies() []Vertex {
+// GetVertices get the array of verts for this mesh
+func (p *Polyhedron) GetVertices() []Vertex {
 	return p.Vertices
 }
 

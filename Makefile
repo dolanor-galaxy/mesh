@@ -1,3 +1,14 @@
+info: 
+	@echo "Task     Does"
+	@echo "--------|-------------------------------"
+	@echo "deps     installs dependencies (if on macos)"
+	@echo "test     runs tests"
+	@echo "start    runs the app in development mode"
+	@echo "clean    cleans up doco and dist files"
+	@echo "build    makes a binary"
+	@echo "install  installs the app"
+	@echo "docs     creates some documentation"
+
 clean:
 	go clean -i
 	rm -rf doco
@@ -16,9 +27,7 @@ build: clean
 
 wasm: clean
 	mkdir dist
-	# go get golang.org/dl/go1.11
-	# go1.11 download
-	GOOS=js GOARCH=wasm go1.11 build -o dist/test.wasm main.go
+	GOOS=js GOARCH=wasm go build -o dist/test.wasm main.go
 
 deps:
 	# SDL 2
