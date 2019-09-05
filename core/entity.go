@@ -43,8 +43,6 @@ func (ge *Entity) GetComponent(t string) Componenter {
 		switch tt {
 		case t:
 			return ge.components[q]
-			// default:
-			// fmt.Printf("Asked for: %v got %v\n", t, tt)
 		}
 	}
 	return nil
