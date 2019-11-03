@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"runtime"
 
 	"github.com/robrohan/mesh/algebra"
@@ -12,8 +13,8 @@ import (
 
 const (
 	winTitle  = "Mesh Test"
-	winWidth  = 640
-	winHeight = 480
+	winWidth  = 800
+	winHeight = 600
 )
 
 func main() {
@@ -38,7 +39,7 @@ func main() {
 		sdl.WINDOWPOS_UNDEFINED,
 		sdl.WINDOWPOS_UNDEFINED,
 		winWidth, winHeight,
-		sdl.WINDOW_OPENGL) //|sdl.WINDOW_FULLSCREEN)
+		sdl.WINDOW_OPENGL|sdl.WINDOW_RESIZABLE) // |sdl.WINDOW_FULLSCREEN)
 	if err != nil {
 		panic(err)
 	}
@@ -62,9 +63,21 @@ func GameLoop(window *sdl.Window) {
 	nbFrames := 0
 	///////////////////////////////////
 
+	w := int32(winWidth)
+	h := int32(winHeight)
+
+	// Much cooler...
+	// mode, err := sdl.GetCurrentDisplayMode(0)
+	// if err == nil {
+	// 	log.Printf("Using CurrentDisplayMode\n")
+	// 	w = mode.W
+	// 	h = mode.H
+	// }
+	log.Printf("W: %v H: %v\n", w, h)
+
 	settings := core.Settings{
-		Width:  winWidth,
-		Height: winHeight,
+		Width:  w,
+		Height: h,
 	}
 
 	renderSystem := render.System{}
@@ -74,23 +87,33 @@ func GameLoop(window *sdl.Window) {
 	scene, camera := buildTestScene(&settings)
 	///////////////////////////////////
 
+	// tempQ := algebra.Quaternion{}
+
 	running = true
 	for running {
 		///////////////////////////////////
 		// Get input
 		for event = sdl.PollEvent(); event != nil; event =
 			sdl.PollEvent() {
-			// switch t := event.(type) {
-			switch event.(type) {
+			switch t := event.(type) {
+			// switch event.(type) {
 			case *sdl.QuitEvent:
 				running = false
-				// case *sdl.MouseMotionEvent:
-				// 	xrot := float32(t.X) / 2
-				// 	yrot := float32(t.Y) / 2
-				// 	camera.Parent.Transform.Position.X = float64(xrot)
-				// 	camera.Parent.Transform.Position.Y = float64(yrot)
+			case *sdl.MouseMotionEvent:
+				xrot := float32(t.X) / 2
+				yrot := float32(t.Y) / 2
+				log.Printf("x: %v y: %v", xrot, yrot)
+				// camera.Parent.Transform.Position.X += float64(xrot)
+				// camera.Parent.Transform.Position.Y += float64(yrot)
 			}
 		}
+
+		// tempQ.SetFromVector(&algebra.AxisZ, algebra.DegToRad((float64(lastTime))))
+		// cameraEntity := camera.GetParent()
+		// cameraEntity.Transform.Position.Y = 3 * math.Sin(float64(lastTime)/10)
+		// cameraEntity.Transform.Position.Z = 3 * math.Sin(float64(lastTime)/10)
+		// // TODO: bad name.
+		// cameraEntity.Transform.RotationMatrix(&tempQ)
 
 		///////////////////////////////////
 		// Render

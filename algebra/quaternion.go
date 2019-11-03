@@ -7,7 +7,8 @@ import "math"
 // 3D space.
 type Quaternion Vector
 
-// SetFromVector sets the quats values given an axis and an angle (the angles are Rads *not* degrees)
+// SetFromVector sets the Quat's values given an axis and an angle
+// (the angles are Rads *not* degrees)
 func (q *Quaternion) SetFromVector(v *Vector, angle float64) {
 	sinHalfAngle := math.Sin(angle * .5)
 	cosHalfAngle := math.Cos(angle * .5)

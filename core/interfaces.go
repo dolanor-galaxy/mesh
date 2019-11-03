@@ -43,11 +43,6 @@ type Componenter interface {
 
 //////////////////////////////////////////////////
 
-// Renderer component that can render itself
-// type Renderer interface {
-// 	Render(RenderSystem)
-// }
-
 // Updater a component that can update itself
 type Updater interface {
 	Update(float64)
@@ -57,13 +52,3 @@ type Updater interface {
 type Inputter interface {
 	Input(float64)
 }
-
-// type RenderComponent struct {
-// 	Component
-// 	Mesh     render.Mesh
-// 	Material render.Material
-// }
-
-// func (rc RenderComponent) Renderer(rs RenderSystem, dt float64) {
-// 	rs.Render(rc.Mesh, rc.Material)
-// }

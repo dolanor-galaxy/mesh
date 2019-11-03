@@ -19,11 +19,3 @@ func (s *Scene) Remove(e *Entity) {
 func (s *Scene) All() []*Entity {
 	return s.children
 }
-
-// func (s *Scene) HasNext() bool {
-// 	return false
-// }
-
-// func (s *Scene) Next() *Entity {
-// 	return s.children[0]
-// }

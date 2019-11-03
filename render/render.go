@@ -49,7 +49,7 @@ func (r *System) InitSystem(s core.Settings, fn RenderInitializer) {
 }
 
 func (r *System) RenderScene(s *core.Scene) error {
-	log.Printf("Start render scene...\n")
+	// log.Printf("Start render scene...\n")
 
 	camera := s.ActiveCamera
 	if camera == nil {
@@ -74,7 +74,6 @@ func (r *System) RenderScene(s *core.Scene) error {
 			})
 		}
 	}
-	log.Printf("Done render scene.\n")
 	return nil
 }
 
@@ -137,7 +136,7 @@ func initOpenGl(width, height int32) error {
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
 	if gl.GetError() != gl.NO_ERROR {
-		return errors.New("Initialzation failed")
+		return errors.New("Initialsation failed")
 	}
 
 	return nil
