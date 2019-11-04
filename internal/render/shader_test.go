@@ -3,7 +3,7 @@ package render_test
 import (
 	"testing"
 
-	"github.com/robrohan/mesh/render"
+	"github.com/robrohan/mesh/internal/render"
 )
 
 func TestShaderCreate(t *testing.T) {

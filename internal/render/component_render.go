@@ -1,7 +1,7 @@
 package render
 
 import (
-	"github.com/robrohan/mesh/core"
+	"github.com/robrohan/mesh/internal/core"
 )
 
 // ComponentRender draw an object on screen

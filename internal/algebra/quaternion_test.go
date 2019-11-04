@@ -3,7 +3,7 @@ package algebra_test
 import (
 	"testing"
 
-	"github.com/robrohan/mesh/algebra"
+	"github.com/robrohan/mesh/internal/algebra"
 )
 
 func TestSetFromVector(t *testing.T) {

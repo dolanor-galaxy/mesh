@@ -4,10 +4,10 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/robrohan/mesh/algebra"
-	"github.com/robrohan/mesh/core"
-	"github.com/robrohan/mesh/model"
-	"github.com/robrohan/mesh/render"
+	"github.com/robrohan/mesh/internal/algebra"
+	"github.com/robrohan/mesh/internal/core"
+	"github.com/robrohan/mesh/internal/model"
+	"github.com/robrohan/mesh/internal/render"
 	"github.com/veandco/go-sdl2/sdl"
 )
 

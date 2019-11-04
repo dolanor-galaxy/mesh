@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	gl "github.com/chsc/gogl/gl21"
-	"github.com/robrohan/mesh/geometry"
+	"github.com/robrohan/mesh/internal/geometry"
 )
 
 // Program wrapper object for an OpenGL Program with Attribute Locations
@@ -29,18 +29,18 @@ type Program struct {
 }
 
 // ReadVertexShader read a vertex shader from disk
-func ReadVertexShader(path string) string {
-	return readShader("vertex", path)
+func ReadVertexShader(root string, path string) string {
+	return readShader(root, "vertex", path)
 }
 
 // ReadFragmentShader read a fragment shader from disk
-func ReadFragmentShader(path string) string {
-	return readShader("fragment", path)
+func ReadFragmentShader(root string, path string) string {
+	return readShader(root, "fragment", path)
 }
 
-func readShader(shaderType string, path string) string {
+func readShader(root string, shaderType string, path string) string {
 	fullPath, err := filepath.Abs(
-		filepath.Join("assets", "shaders", shaderType, path))
+		filepath.Join(root, "assets", "shaders", shaderType, path))
 	if err != nil {
 		panic(err)
 	}
@@ -118,8 +118,8 @@ func compileStatus(shader gl.Uint) (gl.Uint, error) {
 // UseProgram uses a program
 func UseProgram() Program {
 	program, err := CreateProgram(
-		ReadVertexShader("Simple.glsl"),
-		ReadFragmentShader("Simple.glsl"))
+		ReadVertexShader(".", "Simple.glsl"),
+		ReadFragmentShader(".", "Simple.glsl"))
 	if err != nil {
 		panic(err)
 	}

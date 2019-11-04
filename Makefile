@@ -1,4 +1,6 @@
-info: 
+.PHONEY: test
+
+info:
 	@echo "Task     Does"
 	@echo "--------|-------------------------------"
 	@echo "deps     installs dependencies (if on macos)"
@@ -10,7 +12,7 @@ info:
 	@echo "docs     creates some documentation"
 
 clean:
-	go clean -i
+# go clean -i
 	rm -rf doco
 	rm -rf dist
 
@@ -18,16 +20,16 @@ test:
 	go test ./...
 
 start:
-	go run main.go
+	go run cmd/mesh/main.go
 
 build: clean
 	mkdir dist
-	go build -o dist/mesh
+	go build -o dist/mesh cmd/mesh/main.go
 	cp -R assets dist/assets
 
 wasm: clean
 	mkdir dist
-	GOOS=js GOARCH=wasm go build -o dist/test.wasm main.go
+	GOOS=js GOARCH=wasm go build -o dist/test.wasm cmd/mesh/main.go
 
 deps:
 	# SDL 2
@@ -51,6 +53,6 @@ install:
 
 docs: clean
 	mkdir doco
-	godoc -analysis type,pointer -html ./algebra > ./doco/algebra.html
-	godoc -analysis type,pointer -html ./geometry > ./doco/geometry.html
-	godoc -analysis type,pointer -html ./render > ./doco/render.html
+	godoc -analysis type,pointer -html ./internal/algebra > ./doco/algebra.html
+	godoc -analysis type,pointer -html ./internal/geometry > ./doco/geometry.html
+	godoc -analysis type,pointer -html ./internal/render > ./doco/render.html

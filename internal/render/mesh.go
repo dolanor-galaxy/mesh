@@ -5,7 +5,7 @@ import (
 
 	gl "github.com/chsc/gogl/gl21"
 
-	"github.com/robrohan/mesh/geometry"
+	"github.com/robrohan/mesh/internal/geometry"
 )
 
 const (

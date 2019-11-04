@@ -1,6 +1,6 @@
 package core
 
-import "github.com/robrohan/mesh/algebra"
+import "github.com/robrohan/mesh/internal/algebra"
 
 // Transform position in space
 type Transform struct {

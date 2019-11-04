@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/robrohan/mesh/render"
+	"github.com/robrohan/mesh/internal/render"
 )
 
 func testChdir(t *testing.T, dir string) func() {
@@ -23,9 +23,7 @@ func testChdir(t *testing.T, dir string) func() {
 }
 
 func TestReadVertexShader(t *testing.T) {
-	defer testChdir(t, "../")()
-
-	txt := render.ReadVertexShader("Simple.glsl")
+	txt := render.ReadVertexShader("./testdata", "Simple.glsl")
 
 	if txt == "" {
 		t.Errorf("Could not read file %v", txt)
@@ -33,9 +31,7 @@ func TestReadVertexShader(t *testing.T) {
 }
 
 func TestReadFragmentShader(t *testing.T) {
-	defer testChdir(t, "../")()
-
-	txt := render.ReadFragmentShader("Simple.glsl")
+	txt := render.ReadFragmentShader("./testdata", "Simple.glsl")
 
 	if txt == "" {
 		t.Errorf("Could not read file %v", txt)

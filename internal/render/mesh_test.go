@@ -4,9 +4,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/robrohan/mesh/algebra"
-	"github.com/robrohan/mesh/geometry"
-	"github.com/robrohan/mesh/render"
+	"github.com/robrohan/mesh/internal/algebra"
+	"github.com/robrohan/mesh/internal/geometry"
+	"github.com/robrohan/mesh/internal/render"
 )
 
 func makePolygon() geometry.Polyhedron {

@@ -3,8 +3,8 @@ package geometry_test
 import (
 	"testing"
 
-	"github.com/robrohan/mesh/algebra"
-	"github.com/robrohan/mesh/geometry"
+	"github.com/robrohan/mesh/internal/algebra"
+	"github.com/robrohan/mesh/internal/geometry"
 )
 
 func TestVertex(t *testing.T) {

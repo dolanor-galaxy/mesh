@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/robrohan/mesh/algebra"
+	"github.com/robrohan/mesh/internal/algebra"
 )
 
 func TestConsts(t *testing.T) {
