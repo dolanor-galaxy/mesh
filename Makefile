@@ -20,11 +20,11 @@ test:
 	go test ./...
 
 start:
-	go run cmd/mesh/main.go
+	CGO_ENABLED=1 go run cmd/mesh/main.go
 
 build: clean
 	mkdir dist
-	go build -o dist/mesh cmd/mesh/main.go
+	CGO_ENABLED=1 go build -o dist/mesh cmd/mesh/main.go
 	cp -R assets dist/assets
 
 wasm: clean
