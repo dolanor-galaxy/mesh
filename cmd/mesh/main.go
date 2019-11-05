@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"runtime"
 
 	"github.com/robrohan/mesh/internal/algebra"
@@ -18,6 +19,13 @@ const (
 )
 
 func main() {
+	if err := run(); err != nil {
+		log.Printf("error: %s", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	var window *sdl.Window
 	var context sdl.GLContext
 
@@ -51,11 +59,11 @@ func main() {
 	}
 	defer sdl.GLDeleteContext(context)
 
-	GameLoop(window)
+	return GameLoop(window)
 }
 
 // GameLoop main game loop
-func GameLoop(window *sdl.Window) {
+func GameLoop(window *sdl.Window) error {
 	var running bool
 	var event sdl.Event
 	///////////////////////////////////
@@ -133,6 +141,8 @@ func GameLoop(window *sdl.Window) {
 		///////////////////////////////////
 		// time.Sleep(50 * time.Millisecond)
 	}
+
+	return nil
 }
 
 func buildTestScene(s *core.Settings) (*core.Scene, *core.ComponentCamera) {
