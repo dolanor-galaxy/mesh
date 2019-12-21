@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"math"
 	"os"
 	"runtime"
 
@@ -95,7 +96,7 @@ func GameLoop(window *sdl.Window) error {
 	scene, camera := buildTestScene(&settings)
 	///////////////////////////////////
 
-	// tempQ := algebra.Quaternion{}
+	tempQ := algebra.Quaternion{}
 
 	running = true
 	for running {
@@ -116,12 +117,12 @@ func GameLoop(window *sdl.Window) error {
 			}
 		}
 
-		// tempQ.SetFromVector(&algebra.AxisZ, algebra.DegToRad((float64(lastTime))))
-		// cameraEntity := camera.GetParent()
-		// cameraEntity.Transform.Position.Y = 3 * math.Sin(float64(lastTime)/10)
-		// cameraEntity.Transform.Position.Z = 3 * math.Sin(float64(lastTime)/10)
-		// // TODO: bad name.
-		// cameraEntity.Transform.RotationMatrix(&tempQ)
+		tempQ.SetFromVector(&algebra.AxisZ, algebra.DegToRad((float64(lastTime))))
+		cameraEntity := camera.GetParent()
+		cameraEntity.Transform.Position.Y = 3 * math.Sin(float64(lastTime)/10)
+		cameraEntity.Transform.Position.Z = 3 * math.Sin(float64(lastTime)/10)
+		// TODO: bad name.
+		cameraEntity.Transform.RotationMatrix(&tempQ)
 
 		///////////////////////////////////
 		// Render
